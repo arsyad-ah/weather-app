@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Traffic {
+  id               Int      @id @default(autoincrement())
+  location_id      Int
+  image_url        String
+  image_height     Int
+  image_width      Int
+  camera_id        String
+  latitude         Float
+  longitude        Float
+  md5              String
+  image_path       String
+  timestamp        String
+  update_timestamp DateTime @updatedAt
+}
+
+model Weather {
+  id               Int      @id @default(autoincrement())
+  area             String
+  forecast         String
+  timestamp        String
+  update_timestamp DateTime @updatedAt
+}
+
+model LocationMetadata {
+  id               Int      @id @default(autoincrement())
+  name             String
+  latitude         Float
+  longitude        Float
+  timestamp        DateTime @default(now())
+  update_timestamp DateTime @updatedAt
+}
