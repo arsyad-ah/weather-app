@@ -46,10 +46,35 @@ services:
       exec sleep inf;
       "
 
+  scraper:
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+    volumes:
+      - ./scraper/:/opt/scraper:delegated
+      - scraper-data:/opt/scraper/node_modules:delegated
+    env_file: .env
+    ports:
+      - "$SCRAPER_PORT:$SCRAPER_PORT"
+  
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./backend/:/opt/backend:delegated
+  #   env_file: .env
+  #   ports:
+  #     - "3334:3333"
+
 networks:
   app-network:
 
 volumes:
   postgres:
   minio_data:
+    driver: local
+  scraper-data:
     driver: local
