@@ -4,24 +4,17 @@ import { ResponseDto, TrafficDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import * as Minio from 'minio';
 
-const MINIO_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-const MINIO_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
-const ENDPOINT = process.env.MINIO_SERVER_NAME;
-const MINIO_PORT = Number(process.env.MINIO_PORT);
-const BUCKET_NAME = process.env.APP_BUCKET_NAME;
-const IMAGE_FOLDER = process.env.IMAGE_FOLDER;
-
 @Injectable()
 export class TrafficService extends ScraperService {
   private minioClient: Minio.Client;
   constructor(private readonly prisma: PrismaService) {
     super();
     this.minioClient = new Minio.Client({
-      endPoint: ENDPOINT,
-      port: MINIO_PORT,
+      endPoint: process.env.MINIO_SERVER_NAME,
+      port: Number(process.env.MINIO_PORT),
       useSSL: false,
-      accessKey: MINIO_ACCESS_KEY_ID,
-      secretKey: MINIO_SECRET_ACCESS_KEY,
+      accessKey: process.env.AWS_ACCESS_KEY_ID,
+      secretKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
   }
 
@@ -39,14 +32,17 @@ export class TrafficService extends ScraperService {
   }
 
   private async uploadImage(imageUrl: string) {
+    const bucket_name = process.env.APP_BUCKET_NAME;
+    const image_folder = process.env.IMAGE_FOLDER;
+
     const objectName = imageUrl.split('/').slice(-3).join('/');
-    const imagePath = `${IMAGE_FOLDER}/${objectName}`;
+    const imagePath = `${image_folder}/${objectName}`;
     try {
-      await this.minioClient.putObject(BUCKET_NAME, imagePath, imageUrl);
+      await this.minioClient.putObject(bucket_name, imagePath, imageUrl);
       return imagePath;
     } catch (error) {
       throw new Error(
-        `Failed to upload image: ${objectName} to bucket: ${BUCKET_NAME}.\n${error}`,
+        `Failed to upload image: ${objectName} to bucket: ${bucket_name}.\n${error}`,
       );
     }
   }
@@ -61,7 +57,7 @@ export class TrafficService extends ScraperService {
       image_height: traffic.image_metadata.height,
       image_width: traffic.image_metadata.width,
       md5: traffic.image_metadata.md5,
-      location_id: 123,
+      location_id: 123, // TODO: replace with reverse geo-location
     };
     return transformedItem;
   }

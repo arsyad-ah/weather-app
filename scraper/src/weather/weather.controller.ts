@@ -1,16 +1,23 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 
-const URL =
-  'https://api.data.gov.sg/v1/environment/2-hour-weather-forecast?date_time=2023-08-18T01:00:00';
-
 @Controller('weather')
 export class WeatherController {
-  constructor(private readonly weatherScraperService: WeatherService) {}
+  private url: string;
+  private url_2h: string;
+  private url_24h: string;
+  private url_4d: string;
+
+  constructor(private readonly weatherScraperService: WeatherService) {
+    this.url = 'https://api.data.gov.sg/v1/environment';
+    this.url_2h = `${this.url}/2-hour-weather-forecast`;
+    this.url_24h = `${this.url}/24-hour-weather-forecast`;
+    this.url_4d = `${this.url}/4-day-weather-forecast`;
+  }
 
   @Get('download')
   async fetchAndSaveData() {
-    const data = await this.weatherScraperService.fetchData(URL);
+    const data = await this.weatherScraperService.fetchData(this.url_2h);
     await this.weatherScraperService.saveData(data);
     return { message: 'Data fetching and saved' };
   }
