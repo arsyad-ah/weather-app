@@ -15,6 +15,6 @@ export class TrafficController {
     const data = await this.scraperService.fetchData(this.url);
     console.log('saving data');
     await this.scraperService.saveData(data);
-    return { message: 'Data fetching started', data: data };
+    return { message: 'Data fetching started' };
   }
 }

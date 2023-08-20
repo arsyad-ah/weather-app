@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ResponseDto, TrafficDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import * as Minio from 'minio';
+import axios from 'axios';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 
 @Injectable()
 export class TrafficService extends ScraperService {
   private minioClient: Minio.Client;
+
   constructor(private readonly prisma: PrismaService) {
     super();
     this.minioClient = new Minio.Client({
@@ -33,16 +37,28 @@ export class TrafficService extends ScraperService {
 
   private async uploadImage(imageUrl: string) {
     const bucket_name = process.env.APP_BUCKET_NAME;
-    const image_folder = process.env.IMAGE_FOLDER;
+    const image_folder = process.env.APP_IMAGE_FOLDER;
+    const [year, month, filename] = imageUrl.split('/').slice(-3);
 
-    const objectName = imageUrl.split('/').slice(-3).join('/');
-    const imagePath = `${image_folder}/${objectName}`;
+    // download file
+    const tempFilePath = await this.downloadAndProcessFile(imageUrl, filename);
+    const fileStream = fs.createReadStream(tempFilePath);
+    const imagePath = `${image_folder}/${year}/${month}/${filename}`;
+    const size = 2048;
+
     try {
-      await this.minioClient.putObject(bucket_name, imagePath, imageUrl);
+      //upload and delete
+      await this.minioClient.putObject(
+        bucket_name,
+        imagePath,
+        fileStream,
+        size,
+      );
+      await fs.unlink(tempFilePath);
       return imagePath;
     } catch (error) {
       throw new Error(
-        `Failed to upload image: ${objectName} to bucket: ${bucket_name}.\n${error}`,
+        `Failed to upload image: ${filename} to bucket: ${bucket_name}.\n${error}`,
       );
     }
   }
@@ -60,5 +76,22 @@ export class TrafficService extends ScraperService {
       location_id: 123, // TODO: replace with reverse geo-location
     };
     return transformedItem;
+  }
+
+  private async downloadAndProcessFile(url: string, filename: string) {
+    try {
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+
+      // Specify temporary directory
+      const tempDir = path.join(__dirname, '..', 'tmp');
+      const tempFilePath = path.join(tempDir, filename);
+
+      // Save the downloaded data to a temporary file
+      await fs.ensureDir(tempDir);
+      await fs.writeFile(tempFilePath, response.data);
+      return tempFilePath;
+    } catch (error) {
+      console.error(`Error downloading: ${error}`);
+    }
   }
 }
