@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { ResponseDto } from 'src/dto';
+import { ScraperResponseDto } from 'src/dto';
 
 @Injectable()
 export class ScraperService {
@@ -8,7 +8,7 @@ export class ScraperService {
     try {
       const response = await axios.get(url);
       if (response.data.items && response.data.items.length > 0) {
-        const data: ResponseDto = response.data.items[0];
+        const data: ScraperResponseDto = response.data.items[0];
         return data;
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ResponseDto, TrafficDto } from 'src/dto';
+import { ScraperResponseDto, ScraperTrafficDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import * as Minio from 'minio';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 
 @Injectable()
-export class TrafficService extends ScraperService {
+export class ScraperTrafficService extends ScraperService {
   private minioClient: Minio.Client;
 
   constructor(private readonly prisma: PrismaService) {
@@ -22,8 +22,8 @@ export class TrafficService extends ScraperService {
     });
   }
 
-  async saveData(data: ResponseDto) {
-    const traffics: TrafficDto[] = data.cameras;
+  async saveData(data: ScraperResponseDto) {
+    const traffics: ScraperTrafficDto[] = data.cameras;
     if (traffics.length > 0) {
       for (const traffic of traffics) {
         const trafficData = this.transformData(traffic);
@@ -63,7 +63,7 @@ export class TrafficService extends ScraperService {
     }
   }
 
-  private transformData(traffic: TrafficDto) {
+  private transformData(traffic: ScraperTrafficDto) {
     const transformedItem = {
       timestamp: traffic.timestamp,
       image_url: traffic.image,

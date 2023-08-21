@@ -1,33 +1,35 @@
-export class WeatherDto {
+import { Timestamp } from 'rxjs';
+
+export class ScraperWeatherDto {
   area: string;
   forecast: string;
   timestamp?: string;
   update_timestamp?: string;
 }
 
-export class ResponseDto {
+export class ScraperResponseDto {
   timestamp: string;
   valid_period?: any;
   forecasts?: any;
   cameras?: any;
 }
 
-interface ImageLocation {
+interface ScraperImageLocation {
   latitude: number;
   longitude: number;
 }
 
-interface ImageMetadata {
+interface ScraperImageMetadata {
   height: number;
   width: number;
   md5: string;
 }
 
-export class TrafficDto {
-  timestamp: string;
-  location: ImageLocation;
+export class ScraperTrafficDto {
+  timestamp: Date;
+  location: ScraperImageLocation;
   image: string;
-  image_metadata: ImageMetadata;
+  image_metadata: ScraperImageMetadata;
   camera_id: string;
   image_path: string;
   updated_timestamp: string;

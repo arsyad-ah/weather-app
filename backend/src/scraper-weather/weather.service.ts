@@ -1,17 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ResponseDto, WeatherDto } from 'src/dto';
+import { ScraperResponseDto, ScraperWeatherDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class WeatherService extends ScraperService {
+export class ScraperWeatherService extends ScraperService {
   constructor(private readonly prisma: PrismaService) {
     super();
   }
-  private readonly logger = new Logger(WeatherService.name);
+  private readonly logger = new Logger(ScraperWeatherService.name);
 
-  async saveData(data: ResponseDto) {
-    const forecasts: WeatherDto[] = data.forecasts;
+  async saveData(data: ScraperResponseDto) {
+    const forecasts: ScraperWeatherDto[] = data.forecasts;
     console.log(forecasts[0]);
     if (forecasts.length > 0) {
       for (const forecast of forecasts) {

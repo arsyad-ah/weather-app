@@ -1,11 +1,11 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { TrafficService } from './traffic.service';
+import { ScraperTrafficService } from './traffic.service';
 
-@Controller('traffic')
-export class TrafficController {
+@Controller('scraper/traffic')
+export class ScraperTrafficController {
   private url: string;
 
-  constructor(private readonly scraperService: TrafficService) {
+  constructor(private readonly scraperService: ScraperTrafficService) {
     this.url = 'https://api.data.gov.sg/v1/transport/traffic-images';
   }
 
