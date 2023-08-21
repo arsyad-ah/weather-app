@@ -8,12 +8,16 @@ export class WeatherService {
   private readonly logger = new Logger(WeatherService.name);
 
   async getData(area: string) {
+    console.log(area);
     const data: WeatherDto = await this.prisma.weather.findFirst({
       where: {
-        area: area,
+        area: {
+          contains: area,
+        },
       },
     });
     const transformedData = this.transformWeather(data);
+    console.log(transformedData);
     return { data: transformedData };
   }
 

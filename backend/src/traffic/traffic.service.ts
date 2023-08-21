@@ -16,16 +16,19 @@ export class TrafficService {
     });
   }
 
-  async getData(location_id: number, datetime: Date) {
-    console.log(datetime);
+  async getData(location_name: string, datetime: string) {
+    const newDatetime = new Date(datetime);
     try {
       const data = await this.prisma.traffic.findFirst({
         where: {
-          location_id: location_id,
-          timestamp: datetime,
+          location_name: {
+            contains: location_name,
+          },
+          timestamp: {
+            lte: newDatetime,
+          },
         },
       });
-      console.log(data);
       const transformedData: TrafficDto = await this.transformTraffic(data);
       return { data: transformedData };
     } catch (error) {

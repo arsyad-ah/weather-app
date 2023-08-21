@@ -73,7 +73,7 @@ export class ScraperTrafficService extends ScraperService {
       image_height: traffic.image_metadata.height,
       image_width: traffic.image_metadata.width,
       md5: traffic.image_metadata.md5,
-      location_id: 123, // TODO: replace with reverse geo-location
+      location_name: 'test', // TODO: replace with reverse geo-location
     };
     return transformedItem;
   }

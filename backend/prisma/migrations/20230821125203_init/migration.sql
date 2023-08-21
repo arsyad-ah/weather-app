@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "Traffic" (
     "id" SERIAL NOT NULL,
-    "location_id" INTEGER NOT NULL,
+    "location_name" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
     "image_height" INTEGER NOT NULL,
     "image_width" INTEGER NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "Traffic" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "md5" TEXT NOT NULL,
     "image_path" TEXT NOT NULL,
-    "timestamp" TEXT NOT NULL,
+    "timestamp" TIMESTAMP(3) NOT NULL,
     "update_timestamp" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Traffic_pkey" PRIMARY KEY ("id")

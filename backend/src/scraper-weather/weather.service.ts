@@ -12,7 +12,6 @@ export class ScraperWeatherService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const forecasts: ScraperWeatherDto[] = data.forecasts;
-    console.log(forecasts[0]);
     if (forecasts.length > 0) {
       for (const forecast of forecasts) {
         const savedData = await this.prisma.weather.create({
