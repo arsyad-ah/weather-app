@@ -13,7 +13,8 @@ datasource db {
 
 model Traffic {
   id               Int      @id @default(autoincrement())
-  location_id      Int
+  // location_id      Int
+  location_name    String
   image_url        String
   image_height     Int
   image_width      Int
@@ -28,6 +29,8 @@ model Traffic {
 
 model Weather {
   id               Int      @id @default(autoincrement())
+  // area_id          Int
+  // area             LocationMetadata @relation(fields: [area_id], references: [id])
   area             String
   forecast         String
   timestamp        String
@@ -41,4 +44,6 @@ model LocationMetadata {
   longitude        Float
   timestamp        DateTime @default(now())
   update_timestamp DateTime @updatedAt
+
+  // weathers         Weather[]
 }
