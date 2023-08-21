@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { Dayjs } from "dayjs";
+import {Paragraph} from '../shared/style'
 
 interface WeatherInfoProps {
-  selectedDateTime: Date;
+  datetime: Dayjs | null;
+  location: string;
+  forecast: string;
 }
 
-const WeatherInfo: React.FC<WeatherInfoProps> = ({ selectedDateTime }) => {
-  const [weatherInfo, setWeatherInfo] = useState<string>("");
-
-  // Fetch weather information using an API call to NestJS backend based on selectedDateTime
-  useEffect(() => {
-    // Fetch weather information based on the selectedDateTime using an API call to the backend
-    // Update the weatherInfo state with the response data
-    // For demonstration purposes, let's assume weatherInfo is a string
-    const mockWeatherInfo = "Sunny with a chance of clouds";
-    setWeatherInfo(mockWeatherInfo);
-  }, [selectedDateTime]);
-
+const WeatherInfo: React.FC<WeatherInfoProps> = ({ datetime, location, forecast }) => {
+  
   return (
     <div>
       <h2>Weather Information</h2>
-      <p>{weatherInfo}</p>
+      {(location && datetime) ? (
+        <div>
+          <h5>{`Forecast: ${forecast}`}</h5>
+          <Paragraph>{`Location: ${location}`}</Paragraph>
+          <Paragraph>{`Correct as of: ${datetime}`}</Paragraph>
+        </div>
+      ) : <Paragraph>Please select location and date & time</Paragraph>}
     </div>
   );
 };

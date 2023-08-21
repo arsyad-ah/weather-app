@@ -4,62 +4,74 @@ import DateAndTimeSelector from "./datetime/datetime";
 import TrafficDisplay from "./traffic/traffic"
 import { Dayjs } from "dayjs";
 import ContainedButtons from './shared/button'
-import {fetchImageUrl} from './shared/datafetcher'
+import {fetchImageUrl, fetchWeather} from './shared/datafetcher'
 import LocationSelector from "./location/location";
-
+import WeatherInfoProps from './weather/weather'
 
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>('');
-  const [imageUrl, setImageUrl] = useState<string | null>();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [weather, setWeather] = useState<string>('');
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
-    setDatetime(newDatetime);
+    const convertedDatetime = newDatetime?.add(8, 'hour') || null
+    setDatetime(convertedDatetime);
   };
 
   const chooseLocation = (data: string) => {
-    console.log(`data: ${data}`)
     setLocation(data);
   };
 
-  const handleSearchClick = async (name: string) => {
-    const imageUrl = await fetchImageUrl(name)
-    setImageUrl(imageUrl)
-    console.log(imageUrl)
-  }
+  const handleSearchClick = async (location: string, datetime: Dayjs | null) => {
+    if (location && datetime) {
+      const fetchedImageUrl = await fetchImageUrl(location, datetime);
+      const weather = await fetchWeather(location, datetime)
+      setImageUrl(fetchedImageUrl);
+      setWeather(weather);
+    } else {
+      alert('Please check if datetime and location is selected.')
+    }
+  };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h2>My App</h2>
+        <h2>Traffic and Weather App</h2>
       </header>
 
-      <div className="selectors-container">
-        <div className="selector-column">
+      <div className="top-component-grid">
+        <div className="component">
           <DateAndTimeSelector
             datetime={datetime}
             onDatetimeChange={handleDatetimeChange}
           ></DateAndTimeSelector>
         </div>
-        <div className="selector-column">
+        <div className="component">
           <LocationSelector onChange={chooseLocation}></LocationSelector>
-          {location && (<p>{location}</p>)}
         </div>
-      </div>
 
-      <ContainedButtons onClick={()=>handleSearchClick(location)}></ContainedButtons>
-      
-      <div>
-        <h2>Traffic Image</h2>
-        <p>{`Location: ${location}`}</p>
-        { imageUrl ? (<img src={imageUrl} alt="Traffic" width="500" height="300"/>) 
-          : <p>Please select location and date & time</p>}
       </div>
-      <div>
-        <TrafficDisplay 
-          datetime={datetime}
-          location={location}
-        ></TrafficDisplay>
+      <div className="center-button">
+        <ContainedButtons onClick={()=>handleSearchClick(location, datetime)}></ContainedButtons>
+      </div>
+      
+      <div className="bottom-component-grid">
+        <div className="component">
+          <WeatherInfoProps 
+            datetime={datetime} 
+            location={location}
+            forecast={weather}></WeatherInfoProps>
+        </div>
+
+        <div className="component">
+          <TrafficDisplay
+            datetime={datetime}
+            location={location}
+            imageUrl={imageUrl}
+            onLocationChange={()=>handleSearchClick(location, datetime)}
+          ></TrafficDisplay>
+        </div>
       </div>
 
     </div>

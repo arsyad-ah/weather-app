@@ -1,4 +1,4 @@
-export interface WeatherDto {
+export interface TrafficDto {
   timestamp: string;
   image_path: string;
   image_url: string;
@@ -10,4 +10,9 @@ export interface Location {
   location: string;
   longitude: number;
   latitude: number
+}
+
+export interface WeatherDto {
+  forecast: string;
+  location: number;
 }

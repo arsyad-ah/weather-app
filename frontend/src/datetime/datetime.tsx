@@ -5,6 +5,7 @@ import timezone from 'dayjs/plugin/timezone';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import {Paragraph} from '../shared/style'
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -15,11 +16,10 @@ interface DateAndTimeSelectorProps {
   onDatetimeChange: (newDatetime: Dayjs | null) => void;
   }
 
-const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = ({datetime, onDatetimeChange}) => {
-
+const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = ({datetime, onDatetimeChange}) => {  
   return (
     <div>
-      <h4>Select Date and Time</h4>
+      <h2>Select Date and Time</h2>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateTimePicker 
           value={datetime}
@@ -29,10 +29,12 @@ const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = ({datetime, onDa
           autoFocus
         />
       </LocalizationProvider>
-      { datetime && (
-        <p>{`Date selected: ${datetime.tz('Asia/Singapore').format('DD-MM-YYYY HH:mm:ss')}`}</p>
+      <Paragraph>
+        { datetime && (
+          <p>{`Date selected: ${datetime.tz('Asia/Singapore').format('DD-MM-YYYY HH:mm:ss')}`}</p>
+        )}
+      </Paragraph>
         
-      )}
     </div>
   ); 
 };
