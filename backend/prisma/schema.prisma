@@ -22,7 +22,7 @@ model Traffic {
   longitude        Float
   md5              String
   image_path       String
-  timestamp        String
+  timestamp        DateTime
   update_timestamp DateTime @updatedAt
 }
 
