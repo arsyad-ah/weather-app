@@ -1,20 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, SelectProps, selectClasses } from "@mui/base/Select";
 import { Option, optionClasses } from "@mui/base/Option";
 import { Popper } from "@mui/base/Popper";
 import { styled } from "@mui/system";
-
-// TODO: move to Dto
-class Location {constructor(public location: string) {}}
-
-//TODO: remove later
-const bedok = new Location('bedok')
-const tampines = new Location('tampines')
-const pasirris = new Location('pasir ris')
-const allLocations: Location[] = [bedok, tampines, pasirris]
+import { fetchAllLocations } from '../shared/datafetcher'
+import { Location } from '../dto'
 
 interface LocationProps {
-  chooseLocation: (data: string) => void;
+  onChange: (data: string) => void;
 }
 
 function CustomSelect(props: SelectProps<string, false>) {
@@ -28,12 +21,21 @@ function CustomSelect(props: SelectProps<string, false>) {
   return <Select {...props} slots={slots} />;
 }
 
-const LocationSelector: React.FC<LocationProps> = ({chooseLocation}) => {
-  const [location, setLocation] = useState<string | null>("");
+const LocationSelector: React.FC<LocationProps> = ({onChange}) => {
+  const [location, setLocation] = useState<string>('');
+  const [allLocations, setAllLocations] = useState<Location[]>([]);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const locations = await fetchAllLocations();
+      setAllLocations(locations);
+    };
+    fetchLocations();
+  }, []);
 
   const handleLocationChange = (_:any, newValue: string | null) => {
     if (newValue !== null) {
-      chooseLocation(newValue);
+      onChange(newValue);
       setLocation(newValue)
     }
   };
@@ -45,20 +47,17 @@ const LocationSelector: React.FC<LocationProps> = ({chooseLocation}) => {
         onChange={handleLocationChange}
       >
         {allLocations.map((location) => (
-          <StyledOption key={location.location} value={location.location}>
+          <StyledOption key={location.id} value={location.id}>
             {location.location}
           </StyledOption>
         ))}
-
       </CustomSelect>
-
       <Paragraph>Selected location: {location}</Paragraph>
     </div>
   );
 }
 
 export default LocationSelector
-
 
 
 const blue = {
