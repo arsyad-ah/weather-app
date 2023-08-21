@@ -16,14 +16,21 @@ export class TrafficService {
     });
   }
 
-  async getData(location_id: number) {
-    const data = await this.prisma.traffic.findFirst({
-      where: {
-        location_id: location_id,
-      },
-    });
-    const transformedData: TrafficDto = await this.transformTraffic(data);
-    return { data: transformedData };
+  async getData(location_id: number, datetime: Date) {
+    console.log(datetime);
+    try {
+      const data = await this.prisma.traffic.findFirst({
+        where: {
+          location_id: location_id,
+          timestamp: datetime,
+        },
+      });
+      console.log(data);
+      const transformedData: TrafficDto = await this.transformTraffic(data);
+      return { data: transformedData };
+    } catch (error) {
+      return { data: 'No records available' };
+    }
   }
 
   private transformTraffic(data) {

@@ -46,33 +46,33 @@ services:
       exec sleep inf;
       "
 
-  scraper:
-    build:
-      context: ./scraper
-      dockerfile: Dockerfile
-    networks:
-      - app-network
-    volumes:
-      - ./scraper/:/opt/scraper:delegated
-      - scraper-data:/opt/scraper/node_modules:delegated
-    env_file: .env
-    ports:
-      - "$SCRAPER_PORT:$SCRAPER_PORT"
+  # scraper:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: scraper.df
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - ./scraper/:/opt/scraper:delegated
+  #     - scraper-data:/opt/scraper/node_modules:delegated
+  #   env_file: .env
+  #   ports:
+  #     - "$SCRAPER_PORT:$SCRAPER_PORT"
   
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      args:
-        - BACKEND_FOLDER=$BACKEND_FOLDER
-    networks:
-      - app-network
-    volumes:
-      - ./backend/:/opt/${BACKEND_FOLDER}:delegated
-      - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
-    env_file: .env
-    ports:
-      - "$BACKEND_PORT:$BACKEND_PORT"
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: backend.df
+  #     args:
+  #       - BACKEND_FOLDER=$BACKEND_FOLDER
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - ./backend/:/opt/${BACKEND_FOLDER}:delegated
+  #     - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
+  #   env_file: .env
+  #   ports:
+  #     - "$BACKEND_PORT:$BACKEND_PORT"
 
 networks:
   app-network:

@@ -1,55 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import axios from "axios";
 import DateAndTimeSelector from "./datetime/datetime";
+import TrafficDisplay from "./traffic/traffic"
 import { Dayjs } from "dayjs";
-
+import ContainedButtons from './shared/button'
+import {fetchImageUrl} from './shared/datafetcher'
 import LocationSelector from "./location/location";
 
-const URL = "http://localhost:3344/traffic/fetch?location_id=2";
-
-interface WeatherDto {
-  timestamp: string;
-  image_path: string;
-}
 
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
-  
-
-  const [imageUrl, setImageUrl] = useState();
-
-  const imagePath = "assets/images/test-image.jpg";
-  // const imagePath = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fimages%2Fanimals%2Fcat&psig=AOvVaw0qFlcnkfwTrBT3D_GR62tg&ust=1692606649289000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCJCOsqLp6oADFQAAAAAdAAAAABAE';
-
-  const fetchData = async (url: any) =>
-    await axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        // Assuming the response contains the column value
-        const bucketPath = response.data.data.image_path;
-        setImageUrl(bucketPath);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-  useEffect(() => {
-    fetchData(URL);
-  }, []);
+  const [location, setLocation] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string | null>();
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
     setDatetime(newDatetime);
   };
 
-  const [location, setLocation] = useState('No location');
   const chooseLocation = (data: string) => {
+    console.log(`data: ${data}`)
     setLocation(data);
   };
+
+  const handleSearchClick = async (name: string) => {
+    const imageUrl = await fetchImageUrl(name)
+    setImageUrl(imageUrl)
+    console.log(imageUrl)
+  }
 
   return (
     <div className="App">
@@ -65,16 +42,24 @@ function App() {
           ></DateAndTimeSelector>
         </div>
         <div className="selector-column">
-          <LocationSelector chooseLocation={chooseLocation}></LocationSelector>
+          <LocationSelector onChange={chooseLocation}></LocationSelector>
           {location && (<p>{location}</p>)}
         </div>
       </div>
 
-
+      <ContainedButtons onClick={()=>handleSearchClick(location)}></ContainedButtons>
+      
       <div>
         <h2>Traffic Image</h2>
         <p>{`Location: ${location}`}</p>
-        <img src={imagePath} alt="Traffic" />
+        { imageUrl ? (<img src={imageUrl} alt="Traffic" width="500" height="300"/>) 
+          : <p>Please select location and date & time</p>}
+      </div>
+      <div>
+        <TrafficDisplay 
+          datetime={datetime}
+          location={location}
+        ></TrafficDisplay>
       </div>
 
     </div>

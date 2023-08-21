@@ -10,3 +10,10 @@ export class TrafficDto {
   location: number;
   image_url: string;
 }
+
+export class LocationDto {
+  id: number;
+  location: string;
+  latitude: number;
+  longitude: number;
+}

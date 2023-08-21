@@ -1,8 +1,14 @@
 import React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Singapore")
 
 interface DateAndTimeSelectorProps {
   datetime: Dayjs | null;
@@ -11,7 +17,6 @@ interface DateAndTimeSelectorProps {
 
 const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = ({datetime, onDatetimeChange}) => {
 
-  console.log(datetime)
   return (
     <div>
       <h4>Select Date and Time</h4>
@@ -20,12 +25,14 @@ const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = ({datetime, onDa
           value={datetime}
           onChange={onDatetimeChange}
           label="Select date and time"
+          timezone="Asia/Singapore"
           autoFocus
         />
-    </LocalizationProvider>
-    { datetime && (
-      <p>{`Date selected: ${datetime}`}</p>
-    )}
+      </LocalizationProvider>
+      { datetime && (
+        <p>{`Date selected: ${datetime.tz('Asia/Singapore').format('DD-MM-YYYY HH:mm:ss')}`}</p>
+        
+      )}
     </div>
   ); 
 };
