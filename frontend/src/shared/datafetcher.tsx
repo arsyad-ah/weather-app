@@ -1,5 +1,15 @@
 import axios from "axios";
-import { WeatherDto, Location } from '../dto'
+import { WeatherDto, Location, TrafficDto } from '../dto'
+import { Dayjs } from "dayjs";
+
+//TODO: change url when dockerize
+const URL = 'http://localhost:3344'
+
+function processLocationNDatetime(location: string, datetime: Dayjs | null) {
+  const locationName = `location_name=${location}`
+  const encDatetime = `datetime=${datetime?.add(8, 'hour').toISOString()}`
+  return [locationName, encDatetime]
+}
 
 export const fetchData = async (url: string) => {
   const response = await axios.get(url, {
@@ -11,19 +21,28 @@ export const fetchData = async (url: string) => {
   return response
 }
 
-export const fetchImageUrl = async (location: string) => {
-  //TODO: change url when dockerize
-  const url = `http://localhost:3344/traffic/fetch?location_id=${location}`;
+export const fetchImageUrl = async (location: string, datetime: Dayjs | null) => {
+  const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
+
+  const url = `${URL}/traffic/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)
-  const data: WeatherDto = response?.data.data;
-  const imageUrl = data.image_url
+  const data: TrafficDto = response?.data.data;
+  const imageUrl = data?.image_url
   return imageUrl
 }
 
 export const fetchAllLocations = async () => {
-  // TODO: change url when dockerize
-  const url = 'http://localhost:3344/location/fetch_all'
+  const url = `${URL}/location/fetch_all`
   const response = await fetchData(url)
   const data = response?.data
   return data as Location[]
 }
+
+export const fetchWeather = async (location: string, datetime: Dayjs | null) => {
+  const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
+  const url = `${URL}/weather/fetch?${locationName}&${encDatetime}`;
+  const response = await fetchData(url)
+  const data: WeatherDto = response?.data.data;
+  return data?.forecast
+}
+
