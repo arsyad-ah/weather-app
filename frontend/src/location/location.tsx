@@ -47,8 +47,8 @@ const LocationSelector: React.FC<LocationProps> = ({onChange}) => {
         onChange={handleLocationChange}
       >
         {allLocations.map((location) => (
-          <StyledOption key={location.location} value={location.location}>
-            {location.location}
+          <StyledOption key={location.name} value={location.name}>
+            {location.name}
           </StyledOption>
         ))}
       </CustomSelect>
