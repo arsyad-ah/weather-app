@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { ScraperTrafficService } from './traffic.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -11,12 +11,18 @@ export class ScraperTrafficController {
   }
 
   // @Cron(CronExpression.EVERY_MINUTE)
-  @Get('download')
+  @Post('download')
   async fetchAndSaveData() {
     console.debug('getting data');
     const data = await this.scraperService.fetchData(this.url);
     console.debug('saving data');
     await this.scraperService.saveData(data);
     console.log('Traffic data fetching and saved');
+  }
+
+  @Post('seed')
+  async seedImage() {
+    console.log('seedImage');
+    await this.scraperService.seedImageObject();
   }
 }

@@ -35,6 +35,13 @@ export class ScraperTrafficService extends ScraperService {
     }
   }
 
+  async seedImageObject() {
+    const allImages = await this.prisma.traffic.findMany();
+    for (const image of allImages) {
+      this.uploadImage(image.image_url);
+    }
+  }
+
   private async uploadImage(imageUrl: string) {
     const bucket_name = process.env.APP_BUCKET_NAME;
     const image_folder = process.env.APP_IMAGE_FOLDER;
