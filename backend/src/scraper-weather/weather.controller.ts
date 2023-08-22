@@ -1,5 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { ScraperWeatherService } from './weather.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('scraper/weather')
 export class ScraperWeatherController {
@@ -15,10 +16,13 @@ export class ScraperWeatherController {
     this.url_4d = `${this.url}/4-day-weather-forecast`;
   }
 
+  // @Cron(CronExpression.EVERY_MINUTE)
   @Get('download')
   async fetchAndSaveData() {
+    console.debug('getting data');
     const data = await this.weatherScraperService.fetchData(this.url_2h);
+    console.debug('saving data');
     await this.weatherScraperService.saveData(data);
-    return { message: 'Data fetching and saved' };
+    console.log('Weather data fetching and saved');
   }
 }

@@ -1,5 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { ScraperTrafficService } from './traffic.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Controller('scraper/traffic')
 export class ScraperTrafficController {
@@ -9,12 +10,13 @@ export class ScraperTrafficController {
     this.url = 'https://api.data.gov.sg/v1/transport/traffic-images';
   }
 
+  // @Cron(CronExpression.EVERY_MINUTE)
   @Get('download')
   async fetchAndSaveData() {
-    console.log('getting data');
+    console.debug('getting data');
     const data = await this.scraperService.fetchData(this.url);
-    console.log('saving data');
+    console.debug('saving data');
     await this.scraperService.saveData(data);
-    return { message: 'Data fetching started' };
+    console.log('Traffic data fetching and saved');
   }
 }
