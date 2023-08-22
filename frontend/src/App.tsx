@@ -7,12 +7,13 @@ import ContainedButtons from './shared/button'
 import {fetchImageUrl, fetchWeather} from './shared/datafetcher'
 import LocationSelector from "./location/location";
 import WeatherInfoProps from './weather/weather'
+import { TrafficDto, WeatherDto } from "./dto";
 
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>('');
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [weather, setWeather] = useState<string>('');
+  const [image, setImage] = useState<TrafficDto | null>(null);
+  const [weather, setWeather] = useState<WeatherDto | null>(null);
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
     const convertedDatetime = newDatetime?.add(8, 'hour') || null
@@ -25,14 +26,15 @@ function App() {
 
   const handleSearchClick = async (location: string, datetime: Dayjs | null) => {
     if (location && datetime) {
-      const fetchedImageUrl = await fetchImageUrl(location, datetime);
+      const image = await fetchImageUrl(location, datetime);
       const weather = await fetchWeather(location, datetime)
-      setImageUrl(fetchedImageUrl);
+      setImage(image);
       setWeather(weather);
     } else {
       alert('Please check if datetime and location is selected.')
     }
   };
+
 
   return (
     <div className="App">
@@ -60,16 +62,13 @@ function App() {
         <div className="component">
           <WeatherInfoProps 
             datetime={datetime} 
-            location={location}
-            forecast={weather}></WeatherInfoProps>
+            weather={weather}></WeatherInfoProps>
         </div>
 
         <div className="component">
           <TrafficDisplay
             datetime={datetime}
-            location={location}
-            imageUrl={imageUrl}
-            onLocationChange={()=>handleSearchClick(location, datetime)}
+            image={image}
           ></TrafficDisplay>
         </div>
       </div>
