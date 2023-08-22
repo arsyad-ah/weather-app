@@ -7,7 +7,19 @@ export class LocationService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAllLocations() {
-    const locations = await this.prisma.locationMetadata.findMany();
+    const locationNames = await this.prisma.traffic.findMany({
+      distinct: ['location_name'],
+      select: {
+        location_name: true,
+      },
+    });
+    const loc = locationNames.map((loc) => loc.location_name);
+    const locations = await this.prisma.locationMetadata.findMany({
+      select: { name: true, latitude: true, longitude: true },
+      where: { name: { in: loc } },
+      orderBy: { name: 'asc' },
+    });
+
     const mappedLocations: LocationDto[] = locations.map((location) => ({
       name: location.name,
       latitude: location.latitude,

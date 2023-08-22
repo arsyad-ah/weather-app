@@ -46,34 +46,31 @@ services:
       /usr/bin/mc anonymous set public ${MINIO_SERVER_NAME}/${APP_BUCKET_NAME};
       exec sleep inf;
       "
-
-  # scraper:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: scraper.df
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - ./scraper/:/opt/scraper:delegated
-  #     - scraper-data:/opt/scraper/node_modules:delegated
-  #   env_file: .env
-  #   ports:
-  #     - "$SCRAPER_PORT:$SCRAPER_PORT"
   
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: backend.df
-  #     args:
-  #       - BACKEND_FOLDER=$BACKEND_FOLDER
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - ./backend/:/opt/${BACKEND_FOLDER}:delegated
-  #     - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
-  #   env_file: .env
-  #   ports:
-  #     - "$BACKEND_PORT:$BACKEND_PORT"
+  backend:
+    container_name: $BACKEND_NAME
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - BACKEND_FOLDER=$BACKEND_FOLDER
+    networks:
+      - app-network
+    volumes:
+      - ./backend/:/opt/${BACKEND_FOLDER}:delegated
+      - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
+    env_file: .env
+    ports:
+      - "$BACKEND_PORT:$BACKEND_PORT"
+    depends_on:
+      - db
+      - minio-client
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_NAME}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+    # entrypoint: >
+    #   /bin/sh -c "
+    #   cd seed && node seed.ts && cd ..
+    #   "
 
 networks:
   app-network:
@@ -82,7 +79,7 @@ volumes:
   postgres:
   minio_data:
     driver: local
-  scraper-data:
-    driver: local
   backend-data:
     driver: local
+  # scraper-data:
+  #   driver: local

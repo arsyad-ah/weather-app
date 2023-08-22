@@ -128,7 +128,7 @@ export class ScraperTrafficService extends ScraperService {
     });
     if (location === null) {
       const nearesetLocation = this.findNearestReference(latitude, longitude);
-      locationName = nearesetLocation.location_name;
+      locationName = nearesetLocation.name;
     } else {
       locationName = location.location_name;
     }
