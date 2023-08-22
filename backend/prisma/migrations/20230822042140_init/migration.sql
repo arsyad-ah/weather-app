@@ -21,7 +21,7 @@ CREATE TABLE "Weather" (
     "id" SERIAL NOT NULL,
     "area" TEXT NOT NULL,
     "forecast" TEXT NOT NULL,
-    "timestamp" TEXT NOT NULL,
+    "timestamp" TIMESTAMP(3) NOT NULL,
     "update_timestamp" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Weather_pkey" PRIMARY KEY ("id")
