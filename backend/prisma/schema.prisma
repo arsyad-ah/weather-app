@@ -33,7 +33,7 @@ model Weather {
   // area             LocationMetadata @relation(fields: [area_id], references: [id])
   area             String
   forecast         String
-  timestamp        String
+  timestamp        DateTime
   update_timestamp DateTime @updatedAt
 }
 

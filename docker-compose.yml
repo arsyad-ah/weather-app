@@ -1,7 +1,8 @@
 version: '3.3'
 services:
   db:
-    image: postgres:13
+    # image: postgres:13
+    image: postgis/postgis:13-3.4-alpine
     container_name: $POSTGRES_NAME
     env_file: .env
     ports:

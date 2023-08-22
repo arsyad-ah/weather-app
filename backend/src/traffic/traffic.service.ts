@@ -17,6 +17,7 @@ export class TrafficService {
   }
 
   async getData(location_name: string, datetime: string) {
+    console.log(location_name, datetime);
     const newDatetime = new Date(datetime);
     try {
       const data = await this.prisma.traffic.findFirst({
@@ -30,9 +31,10 @@ export class TrafficService {
         },
       });
       const transformedData: TrafficDto = await this.transformTraffic(data);
-      return { data: transformedData };
+      console.log(transformedData);
+      return transformedData;
     } catch (error) {
-      return { data: 'No records available' };
+      throw new Error(`Error fetching data: ${error}`);
     }
   }
 
@@ -41,7 +43,7 @@ export class TrafficService {
       .then((imageUrl) => ({
         timestamp: data.timestamp,
         image_path: data.image_path,
-        location: data.location_id,
+        location: data.location_name,
         image_url: imageUrl,
       }))
       .catch((error) => {

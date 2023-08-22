@@ -1,5 +1,5 @@
 export class WeatherDto {
-  area: string;
+  location: string;
   forecast: string;
   timestamp: string;
 }
