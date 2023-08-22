@@ -12,8 +12,7 @@ export class TrafficDto {
 }
 
 export class LocationDto {
-  id: number;
-  location: string;
+  name: string;
   latitude: number;
   longitude: number;
 }

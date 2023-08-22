@@ -9,8 +9,7 @@ export class LocationService {
   async getAllLocations() {
     const locations = await this.prisma.locationMetadata.findMany();
     const mappedLocations: LocationDto[] = locations.map((location) => ({
-      id: location.id,
-      location: location.name,
+      name: location.name,
       latitude: location.latitude,
       longitude: location.longitude,
     }));
