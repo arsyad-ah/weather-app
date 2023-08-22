@@ -7,7 +7,7 @@ export interface TrafficDto {
 
 export interface Location {
   id: number;
-  location: string;
+  name: string;
   longitude: number;
   latitude: number
 }
