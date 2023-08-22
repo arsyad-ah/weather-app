@@ -7,23 +7,26 @@ export class WeatherService {
   constructor(private readonly prisma: PrismaService) {}
   private readonly logger = new Logger(WeatherService.name);
 
-  async getData(area: string) {
-    console.log(area);
-    const data: WeatherDto = await this.prisma.weather.findFirst({
+  async getData(area: string, datetime: string) {
+    const newDatetime = new Date(datetime);
+    const data = await this.prisma.weather.findFirst({
       where: {
         area: {
           contains: area,
         },
+        timestamp: {
+          lte: newDatetime,
+        },
       },
     });
-    const transformedData = this.transformWeather(data);
+    const transformedData: WeatherDto = this.transformWeather(data);
     console.log(transformedData);
-    return { data: transformedData };
+    return transformedData;
   }
 
   private transformWeather(data) {
     return {
-      area: data.area,
+      location: data.area,
       forecast: data.forecast,
       timestamp: data.timestamp,
     };
