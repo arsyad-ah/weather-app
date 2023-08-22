@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchImageUrl } from '../shared/datafetcher'
 import { Dayjs } from "dayjs";
 import {Paragraph} from '../shared/style'
 import { TrafficDto } from "../dto";
@@ -7,21 +6,21 @@ import { TrafficDto } from "../dto";
 
 interface TrafficDisplayProps {
   datetime: Dayjs | null;
-  image: TrafficDto | null;
+  traffic: TrafficDto | null;
 }
 
 const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
   datetime,
-  image,
+  traffic,
 }) => {  
   
   return (
     <div>
       <h2>Traffic Image</h2>
-      {image && (
+      {traffic && (
         <Paragraph>
-          <p>{`Location: ${image.location}`}</p>
-          <img src={image.image_url} alt="Traffic" width="500" height="300" />
+          <p>{`Location: ${traffic.location}`}</p>
+          <img src={traffic.image_url} alt="Traffic" width="500" height="300" />
           <p>{`Correct as of: ${datetime}`}</p>
         </Paragraph>
       ) || (
