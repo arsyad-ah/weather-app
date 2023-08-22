@@ -11,8 +11,8 @@ services:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       POSTGRES_DB: $POSTGRES_DB
-    # volumes:
-    #   - postgres:/var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -46,19 +46,6 @@ services:
       /usr/bin/mc anonymous set public ${MINIO_SERVER_NAME}/${APP_BUCKET_NAME};
       exec sleep inf;
       "
-
-  # scraper:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: scraper.df
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - ./scraper/:/opt/scraper:delegated
-  #     - scraper-data:/opt/scraper/node_modules:delegated
-  #   env_file: .env
-  #   ports:
-  #     - "$SCRAPER_PORT:$SCRAPER_PORT"
   
   backend:
     container_name: $BACKEND_NAME
@@ -89,7 +76,7 @@ networks:
   app-network:
 
 volumes:
-  # postgres:
+  postgres:
   minio_data:
     driver: local
   backend-data:

@@ -1,3 +1,6 @@
 #! /bin/sh -e
 
-npm run start
+sleep 10
+npx prisma generate \
+&& npx prisma migrate dev \
+&& npm run start:dev
