@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ScraperResponseDto, ScraperTrafficDto } from 'src/dto';
+import { ScraperResponseDto, ScraperTrafficDto, LocationDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import * as Minio from 'minio';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import * as path from 'path';
 @Injectable()
 export class ScraperTrafficService extends ScraperService {
   private minioClient: Minio.Client;
-
+  private allLocations: LocationDto[];
   constructor(private readonly prisma: PrismaService) {
     super();
     this.minioClient = new Minio.Client({
@@ -24,9 +24,17 @@ export class ScraperTrafficService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const traffics: ScraperTrafficDto[] = data.cameras;
+    this.allLocations = await this.prisma.locationMetadata.findMany({
+      select: {
+        name: true,
+        latitude: true,
+        longitude: true,
+      },
+    });
+
     if (traffics.length > 0) {
       for (const traffic of traffics) {
-        const trafficData = this.transformData(traffic);
+        const trafficData = await this.transformData(traffic);
         const bucketPath = await this.uploadImage(trafficData.image_url);
         const savedData = await this.prisma.traffic.create({
           data: { ...trafficData, image_path: bucketPath },
@@ -70,7 +78,11 @@ export class ScraperTrafficService extends ScraperService {
     }
   }
 
-  private transformData(traffic: ScraperTrafficDto) {
+  private async transformData(traffic: ScraperTrafficDto) {
+    const locationName = await this.getLocation(
+      traffic.location.latitude,
+      traffic.location.longitude,
+    );
     const transformedItem = {
       timestamp: traffic.timestamp,
       image_url: traffic.image,
@@ -80,7 +92,7 @@ export class ScraperTrafficService extends ScraperService {
       image_height: traffic.image_metadata.height,
       image_width: traffic.image_metadata.width,
       md5: traffic.image_metadata.md5,
-      location_name: 'test', // TODO: replace with reverse geo-location
+      location_name: locationName,
     };
     return transformedItem;
   }
@@ -100,5 +112,70 @@ export class ScraperTrafficService extends ScraperService {
     } catch (error) {
       console.error(`Error downloading: ${error}`);
     }
+  }
+
+  private async getLocation(latitude: number, longitude: number) {
+    let locationName: string;
+
+    const location = await this.prisma.traffic.findFirst({
+      select: {
+        location_name: true,
+      },
+      where: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+    });
+    if (location === null) {
+      const nearesetLocation = this.findNearestReference(latitude, longitude);
+      locationName = nearesetLocation.location_name;
+    } else {
+      locationName = location.location_name;
+    }
+    return locationName;
+  }
+
+  private findNearestReference(pointLatitude: number, pointLongitude: number) {
+    let nearestReference = null;
+    let minDistance = Infinity;
+
+    for (const location of this.allLocations) {
+      const distance = this.calculateDistance(
+        pointLatitude,
+        pointLongitude,
+        location.latitude,
+        location.longitude,
+      );
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestReference = location;
+      }
+    }
+    return nearestReference;
+  }
+
+  private calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = this.degToRad(lat2 - lat1);
+    const dLon = this.degToRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.degToRad(lat1)) *
+        Math.cos(this.degToRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  }
+
+  private degToRad(deg: number) {
+    return deg * (Math.PI / 180);
   }
 }
