@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WeatherDto } from 'src/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -8,20 +8,25 @@ export class WeatherService {
   private readonly logger = new Logger(WeatherService.name);
 
   async getData(area: string, datetime: string) {
-    const newDatetime = new Date(datetime);
-    const data = await this.prisma.weather.findFirst({
-      where: {
-        area: {
-          contains: area,
+    try {
+      const newDatetime = new Date(datetime);
+      const data = await this.prisma.weather.findFirst({
+        where: {
+          area: {
+            contains: area,
+          },
+          timestamp: {
+            lte: newDatetime,
+          },
         },
-        timestamp: {
-          lte: newDatetime,
-        },
-      },
-    });
-    const transformedData: WeatherDto = this.transformWeather(data);
-    console.log(transformedData);
-    return transformedData;
+      });
+      const transformedData: WeatherDto = this.transformWeather(data);
+      return transformedData;
+    } catch (error) {
+      const errorMsg = 'Error fetching weather data';
+      console.error(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`${errorMsg}: ${error}`);
+    }
   }
 
   private transformWeather(data) {
