@@ -1,5 +1,5 @@
 import axios from "axios";
-import { WeatherDto, Location, TrafficDto } from '../dto'
+import { WeatherDto, Location, TrafficDto, DatetimeDto } from '../dto'
 import { Dayjs } from "dayjs";
 
 //TODO: change url when dockerize
@@ -11,7 +11,7 @@ function processLocationNDatetime(location: string, datetime: Dayjs | null) {
   return [locationName, encDatetime]
 }
 
-export const fetchData = async (url: string) => {
+const fetchData = async (url: string) => {
   const response = await axios.get(url, {
     headers: {"Content-Type": "application/json",},
   })
@@ -41,5 +41,12 @@ export const fetchWeather = async (location: string, datetime: Dayjs | null) => 
   const url = `${URL}/weather/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)
   const data: WeatherDto = response?.data;
+  return data ?? null
+}
+
+export const fetchMinDatetime = async () => {
+  const url = `${URL}/datetime/fetch/min`
+  const response = await fetchData(url);
+  const data: DatetimeDto = response?.data
   return data ?? null
 }

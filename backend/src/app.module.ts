@@ -8,6 +8,7 @@ import { TrafficModule } from './traffic/traffic.module';
 import { LocationModule } from './location/location.module';
 import { ScraperWeatherModule } from './scraper-weather/weather.module';
 import { ScraperTrafficModule } from './scraper-traffic/traffic.module';
+import { DatetimeModule } from './datetime/datetime.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ScraperTrafficModule } from './scraper-traffic/traffic.module';
     LocationModule,
     ScraperWeatherModule,
     ScraperTrafficModule,
+    DatetimeModule,
   ],
   controllers: [AppController],
   providers: [AppService, WeatherService],

@@ -1,11 +1,15 @@
+export class DatetimeDto {
+  timestamp: Date;
+}
+
 export class WeatherDto {
   location: string;
   forecast: string;
-  timestamp: string;
+  timestamp: DatetimeDto['timestamp'];
 }
 
 export class TrafficDto {
-  timestamp: string;
+  timestamp: DatetimeDto['timestamp'];
   image_path: string;
   location: number;
   image_url: string;
