@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { LocationDto } from 'src/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -27,5 +27,21 @@ export class LocationService {
     }));
 
     return mappedLocations;
+  }
+
+  private async getAllUniqueTrafficLocations() {
+    try {
+      const locationNames = await this.prisma.traffic.findMany({
+        distinct: ['location_name'],
+        select: {
+          location_name: true,
+        },
+      });
+      return locationNames;
+    } catch (error) {
+      const errorMsg = 'Error fetching unique traffic location';
+      console.error(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`${errorMsg}: ${error}`);
+    }
   }
 }

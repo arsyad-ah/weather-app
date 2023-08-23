@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TrafficDto } from 'src/dto';
 import * as Minio from 'minio';
@@ -17,7 +17,6 @@ export class TrafficService {
   }
 
   async getData(location_name: string, datetime: string) {
-    console.log(location_name, datetime);
     const newDatetime = new Date(datetime);
     try {
       const data = await this.prisma.traffic.findFirst({
@@ -31,25 +30,22 @@ export class TrafficService {
         },
       });
       const transformedData: TrafficDto = await this.transformTraffic(data);
-      console.log(transformedData);
       return transformedData;
     } catch (error) {
-      throw new Error(`Error fetching data: ${error}`);
+      const errorMsg = 'Error fetching traffic data';
+      console.error(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`${errorMsg}: ${error}`);
     }
   }
 
-  private transformTraffic(data) {
-    return this.getImageUrl(data.image_path)
-      .then((imageUrl) => ({
-        timestamp: data.timestamp,
-        image_path: data.image_path,
-        location: data.location_name,
-        image_url: imageUrl,
-      }))
-      .catch((error) => {
-        console.error(`Error transforming traffic data: ${error}`);
-        throw error;
-      });
+  private async transformTraffic(data) {
+    const traffic = {
+      timestamp: data.timestamp,
+      image_path: data.image_path,
+      location: data.location_name,
+      image_url: await this.getImageUrl(data.image_path),
+    };
+    return traffic;
   }
 
   private async getImageUrl(path: string) {
@@ -60,7 +56,9 @@ export class TrafficService {
       );
       return imageUrl;
     } catch (error) {
-      throw new Error(`Error getting presignedURL: ${error}`);
+      const errorMsg = 'Error getting presignedURL';
+      console.error(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`${errorMsg}: ${error}`);
     }
   }
 }

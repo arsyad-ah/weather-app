@@ -4,7 +4,7 @@ import DateAndTimeSelector from "./datetime/datetime";
 import TrafficDisplay from "./traffic/traffic"
 import { Dayjs } from "dayjs";
 import ContainedButtons from './shared/button'
-import {fetchImageUrl, fetchWeather} from './shared/datafetcher'
+import {fetchTrafficUrl, fetchWeather} from './shared/datafetcher'
 import LocationSelector from "./location/location";
 import WeatherInfoProps from './weather/weather'
 import { TrafficDto, WeatherDto } from "./dto";
@@ -12,7 +12,7 @@ import { TrafficDto, WeatherDto } from "./dto";
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>('');
-  const [image, setImage] = useState<TrafficDto | null>(null);
+  const [traffic, setTraffic] = useState<TrafficDto | null>(null);
   const [weather, setWeather] = useState<WeatherDto | null>(null);
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
@@ -26,9 +26,9 @@ function App() {
 
   const handleSearchClick = async (location: string, datetime: Dayjs | null) => {
     if (location && datetime) {
-      const image = await fetchImageUrl(location, datetime);
+      const traffic = await fetchTrafficUrl(location, datetime);
       const weather = await fetchWeather(location, datetime)
-      setImage(image);
+      setTraffic(traffic);
       setWeather(weather);
     } else {
       alert('Please check if datetime and location is selected.')
@@ -68,7 +68,7 @@ function App() {
         <div className="component">
           <TrafficDisplay
             datetime={datetime}
-            image={image}
+            traffic={traffic}
           ></TrafficDisplay>
         </div>
       </div>

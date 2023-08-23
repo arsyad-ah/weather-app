@@ -3,7 +3,7 @@ import { TrafficService } from './traffic.service';
 
 @Controller('traffic')
 export class TrafficController {
-  constructor(private readonly weatherService: TrafficService) {}
+  constructor(private readonly trafficService: TrafficService) {}
 
   @Get('fetch')
   async fetchData(
@@ -11,7 +11,7 @@ export class TrafficController {
     @Query('datetime') datetime: string,
   ) {
     console.log('getting data');
-    const data = await this.weatherService.getData(area, datetime);
+    const data = await this.trafficService.getData(area, datetime);
     return data;
   }
 }

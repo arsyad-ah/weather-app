@@ -21,20 +21,19 @@ export const fetchData = async (url: string) => {
   return response
 }
 
-export const fetchImageUrl = async (location: string, datetime: Dayjs | null) => {
+export const fetchTrafficUrl = async (location: string, datetime: Dayjs | null) => {
   const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
-
   const url = `${URL}/traffic/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)
   const data: TrafficDto = response?.data
-  return data
+  return data ?? null
 }
 
 export const fetchAllLocations = async () => {
   const url = `${URL}/location/fetch_all`
   const response = await fetchData(url)
-  const data = response?.data
-  return data as Location[]
+  const data: Location[] = response?.data
+  return data ?? null
 }
 
 export const fetchWeather = async (location: string, datetime: Dayjs | null) => {
@@ -42,6 +41,5 @@ export const fetchWeather = async (location: string, datetime: Dayjs | null) => 
   const url = `${URL}/weather/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)
   const data: WeatherDto = response?.data;
-  return data
+  return data ?? null
 }
-
