@@ -18,6 +18,7 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "axios": "^1.4.0",
+    "bootstrap": "^5.3.1",
     "cors": "^2.8.5",
     "dayjs": "^1.11.9",
     "eslint": "^8.47.0",
@@ -68,7 +69,13 @@
     }
   },
   "lint-staged": {
-    "*.+(js|jsx)": ["eslint --fix", "git add"],
-    "*.+(json|css|md)": ["prettier --write", "git add"]
+    "*.+(js|jsx)": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.+(json|css|md)": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

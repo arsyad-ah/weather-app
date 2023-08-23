@@ -1,6 +1,7 @@
 import React from "react";
 import { CLOUDY, IMAGE_PATH, OVERCAST, PARTLY_CLOUDY, PLACEHOLDER_IMAGE, 
   RAIN, SHOWERS, SUNNY, THUNDER, WINDY } from "../../shared/constants";
+import { StyledImg } from "../../shared/style";
 
 const WeatherImageMapping: Record<string, string> = {
   "cloudy": CLOUDY,
@@ -57,7 +58,7 @@ const WeatherImage: React.FC<WeatherMappingProps> = ({ weatherCondition }) => {
   const imageUrl = `${IMAGE_PATH}/${imageFilename}`;  
   return (
     <div>
-      <img src={imageUrl} alt='' height="200" />
+      <StyledImg src={imageUrl} />
     </div>
   );
 }
