@@ -12,13 +12,14 @@ export class ScraperWeatherService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const forecasts: ScraperWeatherDto[] = data.forecasts;
+    const timestamp = new Date();
     if (forecasts.length > 0) {
       for (const forecast of forecasts) {
         const savedData = await this.prisma.weather.create({
           data: {
             area: forecast.area, // Map area to location
             forecast: forecast.forecast,
-            timestamp: data.timestamp,
+            timestamp: timestamp,
           },
         });
       }

@@ -1,29 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import {Paragraph} from '../../shared/style'
 import { TrafficDto } from "../../dto";
 import { DatetimeFormatter } from "../../shared/utils";
+import MyCarousel from "../../shared/carousel";
 
 
 interface TrafficDisplayProps {
-  traffic: TrafficDto | null;
+  traffics: TrafficDto[];
 }
 
 const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
-  traffic,
-}) => {  
-  
-  const formatTimestamp = DatetimeFormatter(traffic?.timestamp || null)
-
+  traffics,
+}) => {
   return (
     <div>
       <h2>Traffic Image</h2>
-      {traffic && (
+      {(traffics.length > 0) ? (
         <div>
-          <Paragraph>{`Location: ${traffic.location}`}</Paragraph>
-          <img src={traffic.image_url} alt="Traffic" width="500" height="300" />
-          <Paragraph>{`Correct as of: ${formatTimestamp}`}</Paragraph>
+          <div className="location">
+            <Paragraph>
+              {`Location: ${traffics[0]?.location}`}
+            </Paragraph>
+          </div>
+          <MyCarousel
+            images={traffics}
+          ></MyCarousel>
+          <div className="correct-timestamp">
+            <Paragraph>
+              {`Correct as of: ${DatetimeFormatter(traffics[0]?.timestamp || null)}`}
+            </Paragraph>
+          </div>
         </div>
-      ) || (
+      ) : (
         <Paragraph>Please select location and date & time</Paragraph>
       )}
     </div>

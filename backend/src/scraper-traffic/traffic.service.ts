@@ -24,6 +24,7 @@ export class ScraperTrafficService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const traffics: ScraperTrafficDto[] = data.cameras;
+    const timestamp = new Date();
     this.allLocations = await this.prisma.locationMetadata.findMany({
       select: {
         name: true,
@@ -37,7 +38,11 @@ export class ScraperTrafficService extends ScraperService {
         const trafficData = await this.transformData(traffic);
         const bucketPath = await this.uploadImage(trafficData.image_url);
         const savedData = await this.prisma.traffic.create({
-          data: { ...trafficData, image_path: bucketPath },
+          data: {
+            ...trafficData,
+            image_path: bucketPath,
+            timestamp: timestamp,
+          },
         });
       }
     }
@@ -84,7 +89,6 @@ export class ScraperTrafficService extends ScraperService {
       traffic.location.longitude,
     );
     const transformedItem = {
-      timestamp: traffic.timestamp,
       image_url: traffic.image,
       latitude: traffic.location.latitude,
       longitude: traffic.location.longitude,

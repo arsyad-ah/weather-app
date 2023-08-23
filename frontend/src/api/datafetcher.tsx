@@ -5,9 +5,9 @@ import { Dayjs } from "dayjs";
 //TODO: change url when dockerize
 const URL = 'http://localhost:3344'
 
-function processLocationNDatetime(location: string, datetime: Dayjs | null) {
-  const locationName = `location_name=${location}`
-  const encDatetime = `datetime=${datetime?.add(8, 'hour').toISOString()}`
+function processLocationNDatetime(location: string, datetime: Dayjs) {
+  const locationName = `location_name=${encodeURIComponent(location)}`
+  const encDatetime = `datetime=${encodeURIComponent(datetime?.add(8, 'hour').toISOString())}`
   return [locationName, encDatetime]
 }
 
@@ -21,12 +21,13 @@ const fetchData = async (url: string) => {
   return response
 }
 
-export const fetchTrafficUrl = async (location: string, datetime: Dayjs | null) => {
+export const fetchTrafficUrl = async (location: string, datetime: Dayjs) => {
   const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
   const url = `${URL}/traffic/fetch?${locationName}&${encDatetime}`;
+  console.log(url)
   const response = await fetchData(url)
-  const data: TrafficDto = response?.data
-  return data ?? null
+  const data: TrafficDto[] = response?.data
+  return data
 }
 
 export const fetchAllLocations = async () => {
@@ -36,7 +37,7 @@ export const fetchAllLocations = async () => {
   return data ?? null
 }
 
-export const fetchWeather = async (location: string, datetime: Dayjs | null) => {
+export const fetchWeather = async (location: string, datetime: Dayjs) => {
   const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
   const url = `${URL}/weather/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)

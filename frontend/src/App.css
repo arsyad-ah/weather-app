@@ -58,7 +58,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
   grid-gap: 20px; /* Gap between components */
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .component {
@@ -71,3 +71,27 @@
 .center-button {
   margin-top: 20px;
 }
+
+.my-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 10vh; */
+}
+
+.carousel-container {
+  max-width: 750px;
+}
+
+.my-carousel img {
+  max-width: 100%;
+  height: auto;
+}
+
+.location {
+  margin-bottom: 10px;
+}
+
+/* .correct-timestamp {
+  margin-top: 5px;
+} */

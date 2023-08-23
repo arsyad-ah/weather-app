@@ -12,7 +12,7 @@ import { TrafficDto, WeatherDto } from "./dto";
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>('');
-  const [traffic, setTraffic] = useState<TrafficDto | null>(null);
+  const [traffics, setTraffics] = useState<TrafficDto[]>([]);
   const [weather, setWeather] = useState<WeatherDto | null>(null);
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
@@ -26,9 +26,9 @@ function App() {
 
   const handleSearchClick = async (location: string, datetime: Dayjs | null) => {
     if (location && datetime) {
-      const traffic = await fetchTrafficUrl(location, datetime);
+      const traffics = await fetchTrafficUrl(location, datetime);
       const weather = await fetchWeather(location, datetime)
-      setTraffic(traffic);
+      setTraffics(traffics);
       setWeather(weather);
     } else {
       alert('Please check if datetime and location is selected.')
@@ -65,11 +65,10 @@ function App() {
 
         <div className="component">
           <TrafficDisplay
-            traffic={traffic}
+            traffics={traffics}
           ></TrafficDisplay>
         </div>
       </div>
-
     </div>
   );
 }
