@@ -6,6 +6,7 @@ import * as Minio from 'minio';
 import axios from 'axios';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { getNow } from 'src/utils/utils';
 
 @Injectable()
 export class ScraperTrafficService extends ScraperService {
@@ -24,7 +25,7 @@ export class ScraperTrafficService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const traffics: ScraperTrafficDto[] = data.cameras;
-    const timestamp = new Date();
+    const timestamp = getNow();
     this.allLocations = await this.prisma.locationMetadata.findMany({
       select: {
         name: true,

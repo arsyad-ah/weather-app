@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TrafficDto } from 'src/dto';
 import * as Minio from 'minio';
+import { convertDatetimeToUTC } from 'src/utils/utils';
 
 @Injectable()
 export class TrafficService {
@@ -18,13 +19,14 @@ export class TrafficService {
 
   async getData(location_name: string, datetime: string) {
     const newDatetime = new Date(datetime);
+    const convertedDatetime = convertDatetimeToUTC(newDatetime);
     try {
       // get the first timestamp in desc order that is <= selected timestamp
       const filterDatetime = await this.prisma.traffic.findFirst({
         select: { timestamp: true },
         orderBy: { timestamp: 'desc' },
         where: {
-          timestamp: { lte: newDatetime },
+          timestamp: { lte: convertedDatetime },
         },
       });
       // find all records based on above timestamp and location

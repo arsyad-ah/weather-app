@@ -24,7 +24,6 @@ const fetchData = async (url: string) => {
 export const fetchTrafficUrl = async (location: string, datetime: Dayjs) => {
   const [locationName, encDatetime] = processLocationNDatetime(location, datetime)
   const url = `${URL}/traffic/fetch?${locationName}&${encDatetime}`;
-  console.log(url)
   const response = await fetchData(url)
   const data: TrafficDto[] = response?.data
   return data

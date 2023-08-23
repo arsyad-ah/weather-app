@@ -17,12 +17,12 @@ export class ScraperTrafficController {
     const data = await this.scraperService.fetchData(this.url);
     console.debug('saving data');
     await this.scraperService.saveData(data);
-    console.log('Traffic data fetching and saved');
+    console.debug('Traffic data fetching and saved');
   }
 
   @Post('seed')
   async seedImage() {
-    console.log('seedImage');
+    console.debug('seedImage');
     await this.scraperService.seedImageObject();
   }
 }

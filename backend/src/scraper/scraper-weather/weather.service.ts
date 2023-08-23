@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ScraperResponseDto, ScraperWeatherDto } from 'src/dto';
 import { ScraperService } from 'src/scraper/scraper.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getNow } from 'src/utils/utils';
 
 @Injectable()
 export class ScraperWeatherService extends ScraperService {
@@ -12,7 +13,7 @@ export class ScraperWeatherService extends ScraperService {
 
   async saveData(data: ScraperResponseDto) {
     const forecasts: ScraperWeatherDto[] = data.forecasts;
-    const timestamp = new Date();
+    const timestamp = getNow();
     if (forecasts.length > 0) {
       for (const forecast of forecasts) {
         const savedData = await this.prisma.weather.create({

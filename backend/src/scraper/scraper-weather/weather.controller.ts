@@ -23,6 +23,6 @@ export class ScraperWeatherController {
     const data = await this.weatherScraperService.fetchData(this.url_2h);
     console.debug('saving data');
     await this.weatherScraperService.saveData(data);
-    console.log('Weather data fetching and saved');
+    console.debug('Weather data fetching and saved');
   }
 }
