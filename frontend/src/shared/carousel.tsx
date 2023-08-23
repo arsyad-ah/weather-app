@@ -20,10 +20,13 @@ interface CarouselProps {
 const MyCarousel: React.FC<CarouselProps> = ({images}) => {
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [curLocation, setCurLocation] = useState('')
-  if (images[0]?.location !== curLocation) {
+  const [curTrafficLocation, setTrafficLocation] = useState('')
+  const [curTrafficDatetime, setTrafficDatetime] = useState<Date>()
+
+  if (images[0]?.location !== curTrafficLocation || images[0]?.timestamp !== curTrafficDatetime) {
     setCurrentIndex(0)
-    setCurLocation(images[0]?.location)
+    setTrafficLocation(images[0]?.location)
+    setTrafficDatetime(images[0]?.timestamp)
   }
 
   function handleChange(index: number) {
