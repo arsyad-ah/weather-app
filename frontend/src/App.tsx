@@ -13,7 +13,7 @@ function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState<string>('');
   const [traffics, setTraffics] = useState<TrafficDto[]>([]);
-  const [weather, setWeather] = useState<WeatherDto | null>(null);
+  const [weather, setWeather] = useState<WeatherDto>();
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
     const convertedDatetime = newDatetime || null

@@ -33,7 +33,7 @@ export const fetchAllLocations = async () => {
   const url = `${URL}/location/fetch_all`
   const response = await fetchData(url)
   const data: Location[] = response?.data
-  return data ?? null
+  return data
 }
 
 export const fetchWeather = async (location: string, datetime: Dayjs) => {
@@ -41,12 +41,12 @@ export const fetchWeather = async (location: string, datetime: Dayjs) => {
   const url = `${URL}/weather/fetch?${locationName}&${encDatetime}`;
   const response = await fetchData(url)
   const data: WeatherDto = response?.data;
-  return data ?? null
+  return data
 }
 
 export const fetchMinDatetime = async () => {
   const url = `${URL}/datetime/fetch/min`
   const response = await fetchData(url);
   const data: DatetimeDto = response?.data
-  return data ?? null
+  return data
 }

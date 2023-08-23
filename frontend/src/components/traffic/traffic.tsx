@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import {Paragraph} from '../../shared/style'
 import { TrafficDto } from "../../dto";
 import { DatetimeFormatter } from "../../shared/utils";
 import MyCarousel from "../../shared/carousel";
-
+import { IMAGE_PATH, PLACEHOLDER_IMAGE } from "../../shared/constants";
 
 interface TrafficDisplayProps {
   traffics: TrafficDto[];
 }
 
-const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
+const TrafficDisplayWrapper: React.FC<TrafficDisplayProps> = ({
   traffics,
 }) => {
-  return (
-    <div>
-      <h2>Traffic Image</h2>
-      {(traffics.length > 0) ? (
+  let content: JSX.Element;
+
+  if (!traffics) {
+    content = (<div>
+      <Paragraph>{`Traffic image for is unavailable. Please check if datetime or location is correct.`}</Paragraph>
+      <img src={`${IMAGE_PATH}/${PLACEHOLDER_IMAGE}`}></img>
+    </div>)
+  } else {
+    if (traffics.length > 0) {
+      content = (
         <div>
           <div className="location">
             <Paragraph>
@@ -31,11 +37,17 @@ const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
             </Paragraph>
           </div>
         </div>
-      ) : (
-        <Paragraph>Please select location and date & time</Paragraph>
-      )}
+      )
+    } else {
+      content = (<Paragraph>Please select location and date & time</Paragraph>)
+    }
+  }
+  return (
+    <div>
+      <h2>Traffic Image</h2>
+      {content}
     </div>
   );
 };
 
-export default TrafficDisplay;
+export default TrafficDisplayWrapper;
