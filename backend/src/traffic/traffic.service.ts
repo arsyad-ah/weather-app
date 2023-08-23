@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TrafficDto } from 'src/dto';
 import * as Minio from 'minio';
+import { convertDatetimeToUTC } from 'src/utils/utils';
 
 @Injectable()
 export class TrafficService {
@@ -18,18 +19,27 @@ export class TrafficService {
 
   async getData(location_name: string, datetime: string) {
     const newDatetime = new Date(datetime);
+    const convertedDatetime = convertDatetimeToUTC(newDatetime);
     try {
-      const data = await this.prisma.traffic.findFirst({
+      // get the first timestamp in desc order that is <= selected timestamp
+      const filterDatetime = await this.prisma.traffic.findFirst({
+        select: { timestamp: true },
+        orderBy: { timestamp: 'desc' },
+        where: {
+          timestamp: { lte: convertedDatetime },
+        },
+      });
+      // find all records based on above timestamp and location
+      const traffics = await this.prisma.traffic.findMany({
         where: {
           location_name: {
             contains: location_name,
           },
-          timestamp: {
-            lte: newDatetime,
-          },
+          timestamp: filterDatetime.timestamp,
         },
       });
-      const transformedData: TrafficDto = await this.transformTraffic(data);
+      const transformedData: TrafficDto[] =
+        await this.transformTraffics(traffics);
       return transformedData;
     } catch (error) {
       const errorMsg = 'Error fetching traffic data';
@@ -38,14 +48,18 @@ export class TrafficService {
     }
   }
 
-  private async transformTraffic(data) {
-    const traffic = {
-      timestamp: data.timestamp,
-      image_path: data.image_path,
-      location: data.location_name,
-      image_url: await this.getImageUrl(data.image_path),
-    };
-    return traffic;
+  private async transformTraffics(traffics) {
+    const transformedTraffics = [];
+    for (const traffic of traffics) {
+      const transformedTraffic = {
+        timestamp: traffic.timestamp,
+        image_path: traffic.image_path,
+        location: traffic.location_name,
+        image_url: await this.getImageUrl(traffic.image_path),
+      };
+      transformedTraffics.push(transformedTraffic);
+    }
+    return transformedTraffics;
   }
 
   private async getImageUrl(path: string) {

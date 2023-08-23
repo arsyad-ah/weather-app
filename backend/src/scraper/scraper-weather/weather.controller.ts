@@ -16,13 +16,13 @@ export class ScraperWeatherController {
     this.url_4d = `${this.url}/4-day-weather-forecast`;
   }
 
-  // @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_MINUTE)
   @Post('download')
   async fetchAndSaveData() {
     console.debug('getting data');
     const data = await this.weatherScraperService.fetchData(this.url_2h);
     console.debug('saving data');
     await this.weatherScraperService.saveData(data);
-    console.log('Weather data fetching and saved');
+    console.debug('Weather data fetching and saved');
   }
 }

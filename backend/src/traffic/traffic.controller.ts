@@ -10,7 +10,7 @@ export class TrafficController {
     @Query('location_name') area: string,
     @Query('datetime') datetime: string,
   ) {
-    console.log('getting data');
+    console.debug('traffic getting data');
     const data = await this.trafficService.getData(area, datetime);
     return data;
   }
