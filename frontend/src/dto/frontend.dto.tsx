@@ -1,5 +1,9 @@
+export interface DatetimeDto {
+  timestamp: Date;
+}
+
 export interface TrafficDto {
-  timestamp: string;
+  timestamp: DatetimeDto['timestamp'];
   image_path: string;
   image_url: string;
   location: string;
@@ -15,4 +19,5 @@ export interface Location {
 export interface WeatherDto {
   forecast: string;
   location: string;
+  timestamp: DatetimeDto['timestamp'];
 }

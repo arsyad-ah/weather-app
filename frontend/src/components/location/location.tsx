@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Select, SelectProps, } from "@mui/base/Select";
-import { fetchAllLocations } from '../shared/datafetcher'
-import { Location } from '../dto'
+import { fetchAllLocations } from '../../api/datafetcher'
+import { Location } from '../../dto'
 import {StyledButton, StyledListbox, StyledPopper, StyledOption, 
-  Paragraph} from '../shared/style'
+  Paragraph} from '../../shared/style'
 
 interface LocationProps {
   onChange: (data: string) => void;
@@ -58,4 +58,3 @@ const LocationSelector: React.FC<LocationProps> = ({onChange}) => {
 }
 
 export default LocationSelector
-

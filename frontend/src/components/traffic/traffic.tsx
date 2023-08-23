@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Dayjs } from "dayjs";
-import {Paragraph} from '../shared/style'
-import { TrafficDto } from "../dto";
+import React from "react";
+import {Paragraph} from '../../shared/style'
+import { TrafficDto } from "../../dto";
+import { DatetimeFormatter } from "../../shared/utils";
 
 
 interface TrafficDisplayProps {
-  datetime: Dayjs | null;
   traffic: TrafficDto | null;
 }
 
 const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
-  datetime,
   traffic,
 }) => {  
   
+  const formatTimestamp = DatetimeFormatter(traffic?.timestamp || null)
+
   return (
     <div>
       <h2>Traffic Image</h2>
       {traffic && (
-        <Paragraph>
-          <p>{`Location: ${traffic.location}`}</p>
+        <div>
+          <Paragraph>{`Location: ${traffic.location}`}</Paragraph>
           <img src={traffic.image_url} alt="Traffic" width="500" height="300" />
-          <p>{`Correct as of: ${datetime}`}</p>
-        </Paragraph>
+          <Paragraph>{`Correct as of: ${formatTimestamp}`}</Paragraph>
+        </div>
       ) || (
         <Paragraph>Please select location and date & time</Paragraph>
       )}
@@ -31,4 +31,3 @@ const TrafficDisplay: React.FC<TrafficDisplayProps> = ({
 };
 
 export default TrafficDisplay;
-

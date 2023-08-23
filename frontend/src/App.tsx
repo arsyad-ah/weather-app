@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
-import DateAndTimeSelector from "./datetime/datetime";
-import TrafficDisplay from "./traffic/traffic"
+import DateAndTimeSelector from "./components/datetime/datetime";
+import TrafficDisplay from "./components/traffic/traffic"
 import { Dayjs } from "dayjs";
 import ContainedButtons from './shared/button'
-import {fetchTrafficUrl, fetchWeather} from './shared/datafetcher'
-import LocationSelector from "./location/location";
-import WeatherInfoProps from './weather/weather'
+import {fetchTrafficUrl, fetchWeather} from './api/datafetcher'
+import LocationSelector from "./components/location/location";
+import WeatherInfoProps from './components/weather/weather'
 import { TrafficDto, WeatherDto } from "./dto";
 
 function App() {
@@ -35,7 +35,6 @@ function App() {
     }
   };
 
-
   return (
     <div className="App">
       <header className="App-header">
@@ -61,13 +60,11 @@ function App() {
       <div className="bottom-component-grid">
         <div className="component">
           <WeatherInfoProps 
-            datetime={datetime} 
             weather={weather}></WeatherInfoProps>
         </div>
 
         <div className="component">
           <TrafficDisplay
-            datetime={datetime}
             traffic={traffic}
           ></TrafficDisplay>
         </div>
