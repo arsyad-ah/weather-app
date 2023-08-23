@@ -16,7 +16,7 @@ function App() {
   const [weather, setWeather] = useState<WeatherDto | null>(null);
 
   const handleDatetimeChange = (newDatetime: Dayjs | null) => {
-    const convertedDatetime = newDatetime?.add(8, 'hour') || null
+    const convertedDatetime = newDatetime || null
     setDatetime(convertedDatetime);
   };
 
