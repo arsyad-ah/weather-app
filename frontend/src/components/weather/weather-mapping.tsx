@@ -1,14 +1,7 @@
 import React from "react";
-
-const CLOUDY = 'cloudy.png'
-const PARTLY_CLOUDY = 'partly-cloudy.png'
-const SUNNY = 'sunshine.png'
-const OVERCAST = 'overcast.png'
-const RAIN = 'rain.png'
-const SHOWERS = 'showers.png'
-const THUNDER = 'thunder.png'
-const WINDY = 'windy.png'
-const NO_IMAGE = 'placeholder.png'
+import { CLOUDY, IMAGE_PATH, OVERCAST, PARTLY_CLOUDY, PLACEHOLDER_IMAGE, 
+  RAIN, SHOWERS, SUNNY, THUNDER, WINDY } from "../../shared/constants";
+import { StyledImg } from "../../shared/style";
 
 const WeatherImageMapping: Record<string, string> = {
   "cloudy": CLOUDY,
@@ -20,22 +13,12 @@ const WeatherImageMapping: Record<string, string> = {
   'shower': SHOWERS,
   'thunder': THUNDER,
   'windy': WINDY,
-  'no_image': NO_IMAGE,
+  'no_image': PLACEHOLDER_IMAGE,
 };
 
-interface WeatherMappingProps {
-  weatherCondition: string;
-}
-
-const WeatherImage: React.FC<WeatherMappingProps> = ({ weatherCondition }) => {
+const MapWeatherToImage = (cleanedWeatherCondition: string) => {
   let imageFilename: string;
 
-  const cleanedWeatherCondition = weatherCondition
-    .toLowerCase()
-    .replace("(day)", "")
-    .replace("(night)", "")
-    .trim();
-  
   // I am not too sure what are the different weather conditions from the API, but
   // these are what I can see so far.
   if (cleanedWeatherCondition.includes('partly cloudy')) {
@@ -57,10 +40,25 @@ const WeatherImage: React.FC<WeatherMappingProps> = ({ weatherCondition }) => {
   } else {
     imageFilename = WeatherImageMapping.no_image
   }
-  const imageUrl = `/assets/images/${imageFilename}`;  
+  return imageFilename
+}
+
+interface WeatherMappingProps {
+  weatherCondition: string;
+}
+
+const WeatherImage: React.FC<WeatherMappingProps> = ({ weatherCondition }) => {
+  const cleanedWeatherCondition = weatherCondition
+    .toLowerCase()
+    .replace("(day)", "")
+    .replace("(night)", "")
+    .trim();
+  
+  const imageFilename = MapWeatherToImage(cleanedWeatherCondition)
+  const imageUrl = `${IMAGE_PATH}/${imageFilename}`;  
   return (
     <div>
-      <img src={imageUrl} alt='' height="200" />
+      <StyledImg src={imageUrl} />
     </div>
   );
 }
