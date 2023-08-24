@@ -16,7 +16,7 @@ export class ScraperWeatherController {
     this.url_4d = `${this.url}/4-day-weather-forecast`;
   }
 
-  // @Cron(CronExpression.EVERY_MINUTE)
+  @Cron('0 */2 * * * *') // Cron expression to run every 2 minutes
   @Post('download')
   async fetchAndSaveData() {
     console.debug('getting data');
