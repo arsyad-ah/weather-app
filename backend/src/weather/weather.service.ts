@@ -26,9 +26,7 @@ export class WeatherService {
       const transformedData: WeatherDto = this.transformWeather(data);
       return transformedData;
     } catch (error) {
-      const errorMsg = 'Error fetching weather data';
-      console.error(`${errorMsg}: ${error}`);
-      throw new NotFoundException(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`Error fetching weather data: ${error}`);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TrafficDto } from 'src/dto';
+import { DatetimeDto, TrafficDto } from 'src/dto';
 import * as Minio from 'minio';
 import { convertDatetimeToUTC } from 'src/utils/utils';
 
@@ -17,18 +17,29 @@ export class TrafficService {
     });
   }
 
-  async getData(location_name: string, datetime: string) {
+  async getLTEDatetime(datetime: string) {
     const newDatetime = new Date(datetime);
     const convertedDatetime = convertDatetimeToUTC(newDatetime);
     try {
       // get the first timestamp in desc order that is <= selected timestamp
-      const filterDatetime = await this.prisma.traffic.findFirst({
+      const filterDatetime: DatetimeDto = await this.prisma.traffic.findFirst({
         select: { timestamp: true },
         orderBy: { timestamp: 'desc' },
         where: {
           timestamp: { lte: convertedDatetime },
         },
       });
+      return filterDatetime;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getFilteredTraffics(
+    location_name: string,
+    filterDatetime: DatetimeDto,
+  ) {
+    try {
       // find all records based on above timestamp and location
       const traffics = await this.prisma.traffic.findMany({
         where: {
@@ -38,20 +49,16 @@ export class TrafficService {
           timestamp: filterDatetime.timestamp,
         },
       });
-      const transformedData: TrafficDto[] =
-        await this.transformTraffics(traffics);
-      return transformedData;
+      return traffics;
     } catch (error) {
-      const errorMsg = 'Error fetching traffic data';
-      console.error(`${errorMsg}: ${error}`);
-      throw new NotFoundException(`${errorMsg}: ${error}`);
+      console.error(error);
     }
   }
 
-  private async transformTraffics(traffics) {
+  async transformTraffics(traffics) {
     const transformedTraffics = [];
     for (const traffic of traffics) {
-      const transformedTraffic = {
+      const transformedTraffic: TrafficDto = {
         timestamp: traffic.timestamp,
         image_path: traffic.image_path,
         location: traffic.location_name,
@@ -70,9 +77,7 @@ export class TrafficService {
       );
       return imageUrl;
     } catch (error) {
-      const errorMsg = 'Error getting presignedURL';
-      console.error(`${errorMsg}: ${error}`);
-      throw new NotFoundException(`${errorMsg}: ${error}`);
+      throw new NotFoundException(`Error getting presignedURL: ${error}`);
     }
   }
 }

@@ -11,7 +11,12 @@ export class TrafficController {
     @Query('datetime') datetime: string,
   ) {
     console.debug('traffic getting data');
-    const data = await this.trafficService.getData(area, datetime);
+    const filterDatetime = await this.trafficService.getLTEDatetime(datetime);
+    const filteredTraffics = await this.trafficService.getFilteredTraffics(
+      area,
+      filterDatetime,
+    );
+    const data = await this.trafficService.transformTraffics(filteredTraffics);
     return data;
   }
 }
