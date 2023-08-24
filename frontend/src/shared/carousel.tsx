@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { Carousel } from 'react-responsive-carousel'
 import { TrafficDto } from '../dto'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import '../style.css'
+import '../styles/app.css'
 
 const renderSlides = (images: TrafficDto[]) =>
   images.map((image: TrafficDto) => (
     <div key={image.location}>
-      <img className='carousel-img' src={image.image_url} alt='Traffic' />
+      <img className='custom-img' src={image.image_url} alt='Traffic' />
     </div>
   ))
 

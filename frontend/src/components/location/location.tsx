@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Select, SelectProps } from '@mui/base/Select'
 import { fetchAllLocations } from '../../api/datafetcher'
 import { Location } from '../../dto'
-import { StyledButton, StyledListbox, StyledPopper, StyledOption, Paragraph } from '../../shared/style'
+import { StyledButton, StyledListbox, StyledPopper, StyledOption, Paragraph } from '../../styles/style'
 
 interface LocationProps {
   onChange: (data: string) => void
@@ -16,7 +16,7 @@ function CustomSelect(props: SelectProps<string, false>) {
     ...props.slots,
   }
 
-  return <Select {...props} slots={slots} />
+  return <Select className='select-box' {...props} slots={slots} />
 }
 
 const LocationSelector: React.FC<LocationProps> = ({ onChange }) => {
@@ -41,14 +41,14 @@ const LocationSelector: React.FC<LocationProps> = ({ onChange }) => {
   return (
     <div>
       <h2 className='title'>Select Location</h2>
-      <CustomSelect value={location} onChange={handleLocationChange}>
+      <CustomSelect className='select-box' value={location} onChange={handleLocationChange}>
         {allLocations.map((location) => (
           <StyledOption key={location.name} value={location.name}>
             {location.name}
           </StyledOption>
         ))}
       </CustomSelect>
-      <Paragraph>Selected location: {location}</Paragraph>
+      {location && <Paragraph>Selected location: {location}</Paragraph>}
     </div>
   )
 }

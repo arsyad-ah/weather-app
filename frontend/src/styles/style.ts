@@ -7,7 +7,7 @@ export const Paragraph = styled('p')(
   ({ theme }) => `
     font-family: IBM Plex Sans, sans-serif;
     font-size: 0.95rem;
-    margin: 10px 0;
+    margin: 15px 0;
     color: ${theme.palette.mode === 'dark' ? grey[400] : grey[700]};
     `,
 )
@@ -34,21 +34,14 @@ export const grey = {
   900: '#24292f',
 }
 
-export const StyledImg = styled('img')(
-  `
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  `,
-)
-
 export const StyledButton = styled('button')(
   ({ theme }) => `
     font-family: IBM Plex Sans, sans-serif;
     font-size: 0.875rem;
     box-sizing: border-box;
-    min-width: 320px;
+    min-width: 20em;
     padding: 8px 12px;
+    margin: 8px 0px 8px 0px;
     border-radius: 8px;
     text-align: left;
     line-height: 1.5;
@@ -91,7 +84,7 @@ export const StyledListbox = styled('ul')(
     box-sizing: border-box;
     padding: 6px;
     margin: 12px 0;
-    min-width: 320px;
+    min-width: 200px;
     border-radius: 12px;
     overflow: auto;
     outline: 0px;

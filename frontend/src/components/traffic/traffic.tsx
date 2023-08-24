@@ -1,9 +1,10 @@
 import React from 'react'
-import { Paragraph, StyledImg } from '../../shared/style'
+import { Paragraph } from '../../styles/style'
 import { TrafficDto } from '../../dto'
 import { DatetimeFormatter } from '../../shared/utils'
 import MyCarousel from '../../shared/carousel'
 import { IMAGE_PATH, PLACEHOLDER_IMAGE } from '../../shared/constants'
+import { InformationFooter, NullInfo, StartingText } from '../../shared/card-content'
 
 interface TrafficDisplayProps {
   traffics: TrafficDto[]
@@ -13,32 +14,26 @@ const TrafficDisplayWrapper: React.FC<TrafficDisplayProps> = ({ traffics }) => {
   let content: JSX.Element
 
   if (!traffics) {
-    content = (
-      <div>
-        <Paragraph>{`Traffic image is unavailable. Please check if datetime or location is correct.`}</Paragraph>
-        <StyledImg src={`${IMAGE_PATH}/${PLACEHOLDER_IMAGE}`}></StyledImg>
-      </div>
-    )
+    content = content = <NullInfo imagePath={IMAGE_PATH} placeholderImage={PLACEHOLDER_IMAGE} infoType={'Traffic image'}></NullInfo>
   } else {
+    const location = traffics[0]?.location
+    const [date, time] = DatetimeFormatter(traffics[0]?.timestamp || null)
+
     if (traffics.length > 0) {
       content = (
         <div>
-          <div className='location'>
-            <Paragraph>{`Location: ${traffics[0]?.location}`}</Paragraph>
-          </div>
+          <Paragraph>{`Location: ${location}`}</Paragraph>
+          <InformationFooter date={date} time={time}></InformationFooter>
           <MyCarousel images={traffics}></MyCarousel>
-          <div className='correct-timestamp'>
-            <Paragraph>{`Correct as of: ${DatetimeFormatter(traffics[0]?.timestamp || null)}`}</Paragraph>
-          </div>
         </div>
       )
     } else {
-      content = <Paragraph>Please select location and date & time</Paragraph>
+      content = <StartingText />
     }
   }
   return (
     <div>
-      <h2 className='title'>Traffic Image</h2>
+      <h2 className='title'>Traffic Information</h2>
       {content}
     </div>
   )

@@ -5,7 +5,7 @@ import timezone from 'dayjs/plugin/timezone'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-import { Paragraph } from '../../shared/style'
+import { Paragraph } from '../../styles/style'
 import { fetchMinDatetime } from '../../api/datafetcher'
 import { DatetimeDto } from '../../dto'
 import { DatetimeFormatter } from '../../shared/utils'
@@ -43,7 +43,6 @@ const DateAndTimeSelector: React.FC<DateAndTimeSelectorProps> = (DateAndTimeSele
           value={datetime}
           onChange={onDatetimeChange}
           label='Select date and time'
-          // autoFocus
           minDateTime={minSelectableDate}
           maxDate={maxSelectableDate}
         />
