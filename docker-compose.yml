@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.3"
 services:
   db:
     # image: postgres:13
@@ -22,8 +22,8 @@ services:
     networks:
       - app-network
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
@@ -46,7 +46,7 @@ services:
       /usr/bin/mc anonymous set public ${MINIO_SERVER_NAME}/${APP_BUCKET_NAME};
       exec sleep inf;
       "
-  
+
   backend:
     container_name: $BACKEND_NAME
     build:
@@ -67,13 +67,30 @@ services:
       - minio-client
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_NAME}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
-    # entrypoint: >
-    #   /bin/sh -c "
-    #   cd seed && node seed.ts && cd ..
-    #   "
+
+  frontend:
+    container_name: $FRONTEND_NAME
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - FRONTEND_FOLDER=$FRONTEND_FOLDER
+    networks:
+      - frontend-network
+    volumes:
+      - ./frontend/:/opt/${FRONTEND_FOLDER}:delegated
+      - frontend-data:/opt/${FRONTEND_FOLDER}/node_modules:delegated
+    env_file: .env
+    ports:
+      - "$FRONTEND_PORT:$FRONTEND_PORT"
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://${BACKEND_NAME}:${BACKEND_PORT}
 
 networks:
   app-network:
+  frontend-network:
 
 volumes:
   postgres:
@@ -81,5 +98,5 @@ volumes:
     driver: local
   backend-data:
     driver: local
-  # scraper-data:
-  #   driver: local
+  frontend-data:
+    driver: local
