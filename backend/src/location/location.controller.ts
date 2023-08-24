@@ -7,7 +7,7 @@ export class LocationController {
 
   @Get('fetch_all')
   async fetchAllLocations() {
-    const locations = await this.locationService.getAllLocations();
-    return locations;
+    const locations = await this.locationService.getUniqueTrafficLocations();
+    return this.locationService.getLocations(locations);
   }
 }

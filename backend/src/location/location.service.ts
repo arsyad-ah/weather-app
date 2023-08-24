@@ -6,20 +6,27 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class LocationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllLocations() {
+  async getUniqueTrafficLocations() {
     const locationNames = await this.prisma.traffic.findMany({
       distinct: ['location_name'],
       select: {
         location_name: true,
       },
     });
-    const loc = locationNames.map((loc) => loc.location_name);
+    const loc: string[] = locationNames.map((loc) => loc.location_name);
+    return loc;
+  }
+  async getLocations(loc: string[]) {
     const locations = await this.prisma.locationMetadata.findMany({
       select: { name: true, latitude: true, longitude: true },
       where: { name: { in: loc } },
       orderBy: { name: 'asc' },
     });
 
+    return this.transformLocations(locations);
+  }
+
+  private transformLocations(locations) {
     const mappedLocations: LocationDto[] = locations.map((location) => ({
       name: location.name,
       latitude: location.latitude,
@@ -39,9 +46,9 @@ export class LocationService {
       });
       return locationNames;
     } catch (error) {
-      const errorMsg = 'Error fetching unique traffic location';
-      console.error(`${errorMsg}: ${error}`);
-      throw new NotFoundException(`${errorMsg}: ${error}`);
+      throw new NotFoundException(
+        `Error fetching unique traffic location: ${error}`,
+      );
     }
   }
 }
