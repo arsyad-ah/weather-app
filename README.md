@@ -102,18 +102,14 @@ Once you have setup the `.env` file, you can start the app. Run the following co
 
 For the `first run / initial setup`, please run this command in the root folder:
 
-`sh initial-run.sh `
-
 `sh initial-run.sh`
 
 For other runs, please execute either one of the following codes based on your docker compose version in the root folder.
 
 V1:
-
 `docker-compose up -d`
 
 V2
-
 `docker compose up -d`
 
 The container may take some time to setup. The initial setup may take longer as it is doing some initial setup and seeding some sample / dummy data to the database before the actual data scraping.
@@ -122,7 +118,7 @@ The container may take some time to setup. The initial setup may take longer as 
 
 # Overall architecture + data flow
 
-This is the overall architecture of the different components and data flow from API source to the DB and storage.
+Below is the overall architecture of the different components and data flow from API source to the DB and storage.
 
 The backend has these services/components - `weather`, `traffic`, `datetime`, `location` and `scraper`.
 
@@ -148,6 +144,7 @@ The App was created based on the architecture below with the following assumptio
 
 # Future Works
 
+- There is a GIS extension in Postgresql that allows fast calculation of latitude/longitude coordinates to get the next nearest point. However, due to time constraints, I was not able to explore much and use the extension in this version of the App.
 - The calendar component needs some rework as it may automatically close the window and allow users to select unavailable time. The current work around it to return an empty image placeholder
 - The location select menu can be quite long. A scroll select menu feature might improve the user's experience
 - A nicer/better selection of weather images based on different forecast values
