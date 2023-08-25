@@ -138,7 +138,7 @@ The App was created based on the architecture below with the following assumptio
 
 - Docker is used as it is easier to setup DB and manage environments using docker containers and purging data
 - Reverse geocoding for traffic latitude and longitude is done based on `scraper/traffic` service component of the backend based on Weather API locations. I have tried a few geocoding APIs such as `OneMap` and `BigDataCloud`, but the API response were either null or have mismatch names when comparing with the Weather API (Bedok vs Bedok New Town). There is also a limit on the number of API calls with the free account
-- The API provider does not allow fetching of data after a certain date - i.e. Today is 01 Sep 2023, but data on 01 Jun 2023 is not available
+- In the future, if the API provider stops hosting data before a certain date - i.e. Today is 01 Sep 2023, but data on 01 Jun 2023 is no longer available. This is also assuming the App has been running before 01 Jun 2023, so that the data is available in DB/storage
 - Initially I wanted to separate the scraper and backend components. However, as I was using PrismaClient to manage the DB services, I would need to maintain duplicate copies of `schema.prisma` files. This would mean manually copying over the file if one of the components gets updated. Hence, for this version of the App, I have combined the 2 components into 1 docker container
 - Weather images are based on what I have seen from the API and NEA website. There might be relevant weather conditions that may have not been covered and this returns an empty image placeholder
 
