@@ -1,29 +1,38 @@
-import React from "react";
-import { CLOUDY, IMAGE_PATH, OVERCAST, PARTLY_CLOUDY, PLACEHOLDER_IMAGE, 
-  RAIN, SHOWERS, SUNNY, THUNDER, WINDY } from "../../shared/constants";
-import { StyledImg } from "../../shared/style";
+import React from 'react'
+import {
+  CLOUDY,
+  IMAGE_PATH,
+  OVERCAST,
+  PARTLY_CLOUDY,
+  PLACEHOLDER_IMAGE,
+  RAIN,
+  SHOWERS,
+  SUNNY,
+  THUNDER,
+  WINDY,
+} from '../../shared/constants'
 
 const WeatherImageMapping: Record<string, string> = {
-  "cloudy": CLOUDY,
-  "partly_cloudy": PARTLY_CLOUDY,
-  "sunny": SUNNY,
-  "sunshine": SUNNY,
-  'overcast': OVERCAST,
-  'rain': RAIN,
-  'shower': SHOWERS,
-  'thunder': THUNDER,
-  'windy': WINDY,
-  'no_image': PLACEHOLDER_IMAGE,
-};
+  cloudy: CLOUDY,
+  partly_cloudy: PARTLY_CLOUDY,
+  sunny: SUNNY,
+  sunshine: SUNNY,
+  overcast: OVERCAST,
+  rain: RAIN,
+  shower: SHOWERS,
+  thunder: THUNDER,
+  windy: WINDY,
+  no_image: PLACEHOLDER_IMAGE,
+}
 
 const MapWeatherToImage = (cleanedWeatherCondition: string) => {
-  let imageFilename: string;
+  let imageFilename: string
 
   // I am not too sure what are the different weather conditions from the API, but
   // these are what I can see so far.
   if (cleanedWeatherCondition.includes('partly cloudy')) {
     imageFilename = WeatherImageMapping.partly_cloudy
-  } else if (cleanedWeatherCondition.includes('cloudy') || cleanedWeatherCondition.includes('cloud')){
+  } else if (cleanedWeatherCondition.includes('cloudy') || cleanedWeatherCondition.includes('cloud')) {
     imageFilename = WeatherImageMapping.cloudy
   } else if (cleanedWeatherCondition.includes('sunny') || cleanedWeatherCondition.includes('sunshine')) {
     imageFilename = WeatherImageMapping.sunny
@@ -44,23 +53,19 @@ const MapWeatherToImage = (cleanedWeatherCondition: string) => {
 }
 
 interface WeatherMappingProps {
-  weatherCondition: string;
+  weatherCondition: string
 }
 
 const WeatherImage: React.FC<WeatherMappingProps> = ({ weatherCondition }) => {
-  const cleanedWeatherCondition = weatherCondition
-    .toLowerCase()
-    .replace("(day)", "")
-    .replace("(night)", "")
-    .trim();
-  
+  const cleanedWeatherCondition = weatherCondition.toLowerCase().replace('(day)', '').replace('(night)', '').trim()
+
   const imageFilename = MapWeatherToImage(cleanedWeatherCondition)
-  const imageUrl = `${IMAGE_PATH}/${imageFilename}`;  
+  const imageUrl = `${IMAGE_PATH}/${imageFilename}`
   return (
     <div>
-      <StyledImg src={imageUrl} />
+      <img className='custom-img' src={imageUrl} />
     </div>
-  );
+  )
 }
 
-export default WeatherImage;
+export default WeatherImage

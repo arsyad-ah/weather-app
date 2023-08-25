@@ -1,9 +1,10 @@
 import React from 'react'
-import { Paragraph, StyledImg } from '../../shared/style'
+import { Paragraph } from '../../styles/style'
 import { WeatherDto } from '../../dto'
 import { DatetimeFormatter } from '../../shared/utils'
 import WeatherImage from './weather-mapping'
 import { EMPTY_FORECAST, IMAGE_PATH, PLACEHOLDER_IMAGE } from '../../shared/constants'
+import { InformationFooter, NullInfo, StartingText } from '../../shared/card-content'
 
 interface WeatherInfoProps {
   weather: WeatherDto | null | undefined
@@ -14,28 +15,20 @@ const WeatherInfo: React.FC<WeatherInfoProps> = ({ weather }) => {
 
   const [date, time] = DatetimeFormatter(weather?.timestamp || null)
   const forecast = weather?.forecast || EMPTY_FORECAST
+  const location = weather?.location
 
   if (weather === undefined) {
-    content = (
-      <div>
-        <Paragraph>Please select location and date & time</Paragraph>
-      </div>
-    )
+    content = <StartingText />
   } else {
     if (weather === null) {
-      content = (
-        <div>
-          <Paragraph>{`Weather forecast is unavailable. Please check if datetime or location is correct.`}</Paragraph>
-          <StyledImg src={`${IMAGE_PATH}/${PLACEHOLDER_IMAGE}`}></StyledImg>
-        </div>
-      )
+      content = <NullInfo imagePath={IMAGE_PATH} placeholderImage={PLACEHOLDER_IMAGE} infoType={'Weather forecast'}></NullInfo>
     } else {
       content = (
         <div>
-          <h4>{`Forecast: ${forecast}`}</h4>
-          <Paragraph>{`Location: ${weather?.location}`}</Paragraph>
+          <Paragraph>{`Location: ${location}`}</Paragraph>
+          <InformationFooter date={date} time={time}></InformationFooter>
           <WeatherImage weatherCondition={forecast}></WeatherImage>
-          <Paragraph>{`Correct as of: ${date} ${time}`}</Paragraph>
+          <h4>{`Forecast: ${forecast}`}</h4>
         </div>
       )
     }

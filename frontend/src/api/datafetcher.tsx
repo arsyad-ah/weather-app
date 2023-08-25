@@ -3,7 +3,7 @@ import { WeatherDto, Location, TrafficDto, DatetimeDto } from '../dto'
 import { Dayjs } from 'dayjs'
 
 //TODO: change url when dockerize
-const URL = 'http://localhost:3344'
+const URL = process.env.BACKEND_URL ?? 'http://localhost:3344'
 
 function processLocationNDatetime(location: string, datetime: Dayjs) {
   const locationName = `location_name=${encodeURIComponent(location)}`

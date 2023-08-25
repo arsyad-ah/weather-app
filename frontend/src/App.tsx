@@ -8,9 +8,8 @@ import LocationSelector from './components/location/location'
 import WeatherInfoProps from './components/weather/weather'
 import { TrafficDto, WeatherDto } from './dto'
 import Container from '@mui/material/Container'
-import CssBaseline from '@mui/material/CssBaseline'
-import Grid from '@mui/material/Unstable_Grid2'
-import './style.css'
+import Grid from '@mui/material/Grid'
+import './styles/app.css'
 
 function App() {
   const [datetime, setDatetime] = useState<Dayjs | null>(null)
@@ -39,33 +38,39 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <Container className='App'>
       <header className='App-header'>
         <h2>Traffic and Weather App</h2>
       </header>
 
-      <Container maxWidth='xl' className='top-component-grid'>
-        <div className='component'>
-          <DateAndTimeSelector datetime={datetime} onDatetimeChange={handleDatetimeChange}></DateAndTimeSelector>
-        </div>
-        <div className='component'>
-          <LocationSelector onChange={chooseLocation}></LocationSelector>
-        </div>
+      <Container>
+        <Container className='component-border outer-component'>
+          <Grid className='top-component-grid'>
+            <Grid className='component-datetime'>
+              <DateAndTimeSelector datetime={datetime} onDatetimeChange={handleDatetimeChange}></DateAndTimeSelector>
+            </Grid>
+
+            <Grid className='component-loc'>
+              <LocationSelector onChange={chooseLocation}></LocationSelector>
+            </Grid>
+          </Grid>
+
+          <Container className='button'>
+            <ContainedButtons onClick={() => handleSearchClick(location, datetime)}></ContainedButtons>
+          </Container>
+        </Container>
+
+        <Grid className='bottom-component-grid'>
+          <Grid className='component component-border'>
+            <WeatherInfoProps weather={weather}></WeatherInfoProps>
+          </Grid>
+
+          <Grid className='component component-border'>
+            <TrafficDisplay traffics={traffics}></TrafficDisplay>
+          </Grid>
+        </Grid>
       </Container>
-      <div className='button'>
-        <ContainedButtons onClick={() => handleSearchClick(location, datetime)}></ContainedButtons>
-      </div>
-
-      <div className='bottom-component-grid'>
-        <Container maxWidth='md' className='component'>
-          <WeatherInfoProps weather={weather}></WeatherInfoProps>
-        </Container>
-
-        <Container maxWidth='md' className='component'>
-          <TrafficDisplay traffics={traffics}></TrafficDisplay>
-        </Container>
-      </div>
-    </div>
+    </Container>
   )
 }
 
