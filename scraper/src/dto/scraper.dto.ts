@@ -1,5 +1,3 @@
-import { Timestamp } from 'rxjs';
-
 export class ScraperWeatherDto {
   area: string;
   forecast: string;
@@ -33,4 +31,10 @@ export class ScraperTrafficDto {
   camera_id: string;
   image_path: string;
   updated_timestamp: string;
+}
+
+export class LocationDto {
+  name: string;
+  latitude: number;
+  longitude: number;
 }

@@ -58,6 +58,7 @@ services:
       - app-network
     volumes:
       - ./backend/:/opt/${BACKEND_FOLDER}:delegated
+      - ./shared/prisma/:/opt/${BACKEND_FOLDER}:delegated
       - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
     env_file: .env
     ports:
@@ -65,6 +66,29 @@ services:
     depends_on:
       - db
       - minio-client
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_NAME}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+
+  scraper:
+    container_name: $SCRAPER_NAME
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+      args:
+        - SCRAPER_FOLDER=$SCRAPER_FOLDER
+    networks:
+      - app-network
+    volumes:
+      - ./scraper/:/opt/${SCRAPER_FOLDER}:delegated
+      - ./shared/prisma/:/opt/${SCRAPER_FOLDER}:delegated
+      - scraper-data:/opt/${SCRAPER_FOLDER}/node_modules:delegated
+    env_file: .env
+    ports:
+      - "$SCRAPER_PORT:$SCRAPER_PORT"
+    depends_on:
+      - db
+      - minio-client
+      - backend
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_NAME}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
 
@@ -97,6 +121,8 @@ volumes:
   minio_data:
     driver: local
   backend-data:
+    driver: local
+  scraper-data:
     driver: local
   frontend-data:
     driver: local

@@ -3,15 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  // output   = env("PRISMA_OUT")
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
-
 }
-
 
 model Traffic {
   id               Int      @id @default(autoincrement())
