@@ -10,7 +10,7 @@ export class ScraperTrafficController {
     this.url = 'https://api.data.gov.sg/v1/transport/traffic-images';
   }
 
-  @Cron('0 */2 * * * *') // Cron expression to run every 2 minutes
+  // @Cron('0 */2 * * * *') // Cron expression to run every 2 minutes
   @Post('download')
   async fetchAndSaveData() {
     console.debug('getting data');

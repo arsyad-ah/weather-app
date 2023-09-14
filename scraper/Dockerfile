@@ -1,6 +1,8 @@
 FROM node:18.17.1-buster-slim
 
-ENV APP_ROOT /opt/scraper
+ARG SCRAPER_FOLDER
+
+ENV APP_ROOT /opt/${BACKEND_FOLDER}
 WORKDIR $APP_ROOT
 
 RUN apt-get update && apt-get install -y --no-install-recommends git
