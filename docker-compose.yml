@@ -58,7 +58,7 @@ services:
       - app-network
     volumes:
       - ./backend/:/opt/${BACKEND_FOLDER}:delegated
-      - ./shared/prisma/:/opt/${BACKEND_FOLDER}:delegated
+      - ./shared/prisma/:/opt/${BACKEND_FOLDER}/prisma:delegated
       - backend-data:/opt/${BACKEND_FOLDER}/node_modules:delegated
     env_file: .env
     ports:
@@ -80,7 +80,7 @@ services:
       - app-network
     volumes:
       - ./scraper/:/opt/${SCRAPER_FOLDER}:delegated
-      - ./shared/prisma/:/opt/${SCRAPER_FOLDER}:delegated
+      - ./shared/prisma/:/opt/${SCRAPER_FOLDER}/prisma:delegated
       - scraper-data:/opt/${SCRAPER_FOLDER}/node_modules:delegated
     env_file: .env
     ports:
